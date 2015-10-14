@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Star Maker</title>
+  <link rel="stylesheet" href="jquery-ui.css">
+  <script src="jquery-2.1.4.js"></script>
+  <script src="jquery-ui.js"></script>
+  <style>
+  .red, .green, .blue, h3, #inner-radius {
+    float: left;
+    clear: left;
+    width: 300px;
+    margin: 15px;
+  }
+  .red .ui-slider-range { background: #ef2929; }
+  .red .ui-slider-handle { border-color: #ef2929; }
+  .green .ui-slider-range { background: #8ae234; }
+  .green .ui-slider-handle { border-color: #8ae234; }
+  .blue .ui-slider-range { background: #729fcf; }
+  .blue .ui-slider-handle { border-color: #729fcf; }
+  svg {
+    width: 25%;
+    margin: 1em;
+  }
+  </style>
+  <script>
+  function hexFromRGB(r, g, b) {
+    var hex = [
+      r.toString( 16 ),
+      g.toString( 16 ),
+      b.toString( 16 )
+    ];
+    $.each( hex, function( nr, val ) {
+      if ( val.length === 1 ) {
+        hex[ nr ] = "0" + val;
+      }
+    });
+    return hex.join( "" ).toUpperCase();
+  }
+  function refreshForeground() {
+    var red = $( "#red-fg" ).slider( "value" ),
+      green = $( "#green-fg" ).slider( "value" ),
+      blue = $( "#blue-fg" ).slider( "value" ),
+      hex = hexFromRGB( red, green, blue );
+    $( "#swatch" ).css( "color", "#" + hex );
+  }
+  function refreshBackground() {
+    var red = $( "#red-bg" ).slider( "value" ),
+      green = $( "#green-bg" ).slider( "value" ),
+      blue = $( "#blue-bg" ).slider( "value" ),
+      hex = hexFromRGB( red, green, blue );
+    $( "#swatch" ).css( "background-color", "#" + hex );
+  }
+
+  function polarToCartesian(angle, distance) {
+    x = Math.cos(angle) * distance;
+    y = Math.sin(angle) * distance;
+    return {x: x, y: y}
+  }
+
+  function refreshStarPath() {
+    var innerRadius = $( "#inner-radius" ).slider( "value") / 1000.0;
+    var outerRadius = 1;
+    var innerAngles = [-7*Math.PI/10, -3*Math.PI/10,   Math.PI/10, 5*Math.PI/10,  9*Math.PI/10]
+    var outerAngles = [-5*Math.PI/10,   -Math.PI/10, 3*Math.PI/10, 7*Math.PI/10, -9*Math.PI/10]
+    var innerPoints = innerAngles.map(function(angle) {
+      return polarToCartesian(angle, innerRadius);
+    });
+    var outerPoints = outerAngles.map(function(angle) {
+      return polarToCartesian(angle, outerRadius);
+    });
+    var points = [];
+    for (i = 0; i < innerPoints.length; i++) {
+      points.push(innerPoints[i]);
+      points.push(outerPoints[i]);
+    }
+    var pointStrings = points.map(function(point) {
+      return " " + point.x + "," + point.y;
+    });
+    var pathString = "M" + pointStrings[0] + " L";
+    for (i = 1; i < pointStrings.length; i++) {
+      pathString += pointStrings[i];
+    }
+    pathString += " Z"
+    $( "#star" ).attr("d", pathString);
+  }
+
+  $( document ).ready(function() {
+    $( "#red-fg, #green-fg, #blue-fg, #red-bg, #green-bg, #blue-bg" ).slider({
+      orientation: "horizontal",
+      range: "min",
+      max: 255,
+      value: 127
+    });
+    $( "#red-fg, #green-fg, #blue-fg" ).slider({
+      slide: refreshForeground,
+      change: refreshForeground
+    });
+    $( "#red-bg, #green-bg, #blue-bg" ).slider({
+      slide: refreshBackground,
+      change: refreshBackground
+    });
+    $( "#red-fg" ).slider( "value", 253 );
+    $( "#green-fg" ).slider( "value", 220 );
+    $( "#blue-fg" ).slider( "value", 52 );
+    $( "#red-bg, #green-bg, #blue-bg" ).slider( "value", 0 );
+    $( "#inner-radius" ).slider({
+      orientation: "horizontal",
+      range: "min",
+      max: 1000,
+      value: 500,
+      slide: refreshStarPath,
+      change: refreshStarPath
+    });
+    $( "#inner-radius" ).slider( "value", 1000 );
+  });
+  </script>
+</head>
+<body class="ui-widget-content" style="border:0;">
+ 
+<h3>Inner Radius</h3>
+<div id="inner-radius"></div>
+
+<h3>Foreground color</h3>
+<div id="red-fg" class="red"></div>
+<div id="green-fg" class="green"></div>
+<div id="blue-fg" class="blue"></div>
+ 
+<h3>Background color</h3>
+<div id="red-bg" class="red"></div>
+<div id="green-bg" class="green"></div>
+<div id="blue-bg" class="blue"></div>
+
+<svg id="swatch" viewBox="-1.1 -1.1 2.2 2.2">
+  <path id="star" d="M 1,0 L 0,1 -1,0 0,-1 Z" fill="currentColor"/>
+</svg>
+ 
+ 
+</body>
+</html>
