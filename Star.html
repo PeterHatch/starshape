@@ -59,6 +59,10 @@
     return {x: x, y: y}
   }
 
+  function pointAsString(point) {
+    return "" + point.x + "," + point.y;
+  }
+
   function refreshStarPath() {
     var innerRadius = $( "#inner-radius" ).slider( "value") / 1000.0;
     var outerRadius = 1;
@@ -70,17 +74,18 @@
     var outerPoints = outerAngles.map(function(angle) {
       return polarToCartesian(angle, outerRadius);
     });
-    var points = [];
+
+
+    var pathString = "";
     for (i = 0; i < innerPoints.length; i++) {
-      points.push(innerPoints[i]);
-      points.push(outerPoints[i]);
-    }
-    var pointStrings = points.map(function(point) {
-      return " " + point.x + "," + point.y;
-    });
-    var pathString = "M" + pointStrings[0] + " L";
-    for (i = 1; i < pointStrings.length; i++) {
-      pathString += pointStrings[i];
+      if (i === 0) {
+        pathString += "M ";
+      }
+      else {
+        pathString += " L ";
+      }
+      pathString += pointAsString(innerPoints[i]);
+      pathString += " L " + pointAsString(outerPoints[i]);
     }
     pathString += " Z"
     $( "#star" ).attr("d", pathString);
