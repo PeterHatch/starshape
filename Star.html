@@ -76,18 +76,11 @@
     });
 
 
-    var pathString = "";
-    for (i = 0; i < innerPoints.length; i++) {
-      if (i === 0) {
-        pathString += "M ";
-      }
-      else {
-        pathString += " L ";
-      }
-      pathString += pointAsString(innerPoints[i]);
-      pathString += " L " + pointAsString(outerPoints[i]);
+    var pathString = "M " + pointAsString(innerPoints[0]);
+    for (i = 0; i < innerPoints.length - 1; i++) {
+      pathString += " C " + pointAsString(outerPoints[i]) + " " + pointAsString(outerPoints[i]) + " " + pointAsString(innerPoints[i + 1]);
     }
-    pathString += " Z"
+    pathString += " C " + pointAsString(outerPoints[4]) + " " + pointAsString(outerPoints[4]) + " " + pointAsString(innerPoints[0]) + " Z";
     $( "#star" ).attr("d", pathString);
   }
 
@@ -118,7 +111,7 @@
       slide: refreshStarPath,
       change: refreshStarPath
     });
-    $( "#inner-radius" ).slider( "value", 1000 );
+    $( "#inner-radius" ).slider( "value", 500 );
   });
   </script>
 </head>
