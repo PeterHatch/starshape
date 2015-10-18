@@ -1,0 +1,30 @@
+doctype html
+html lang="en"
+  head
+    meta charset="utf-8"
+    title Star Maker
+
+    link rel="stylesheet" href="jquery-ui.css"
+    script src="jquery-2.1.4.js"
+    script src="jquery-ui.js"
+
+    link rel="stylesheet" href="star-maker.css"
+    script src="star-maker.js"
+
+  body class="ui-widget-content" style="border:0;"
+
+    h3 Inner Radius
+    #inner-radius
+
+    h3 Foreground color
+    #red-fg class="red"
+    #green-fg class="green"
+    #blue-fg class="blue"
+
+    h3 Background color
+    #red-bg class="red"
+    #green-bg class="green"
+    #blue-bg class="blue"
+
+    svg id="swatch" viewBox="-1.1 -1.1 2.2 2.2"
+      path id="star" d="M 1,0 L 0,1 -1,0 0,-1 Z" fill="currentColor"
