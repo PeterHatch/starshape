@@ -21,8 +21,13 @@ pointAsString = (point) ->
   "" + point.x + "," + point.y
 
 
+updateInnerRadius = () ->
+  $(".rangeslider__handle", innerRadiusElement.$range).text(innerRadiusElement.val())
+  refreshStarPath()
+
+
 refreshStarPath = () ->
-  innerRadius = innerRadiusElement.val() / 100
+  innerRadius = innerRadiusElement.val()
   outerRadius = 1;
   innerAngles = [-7*Math.PI/10, -3*Math.PI/10,   Math.PI/10, 5*Math.PI/10,  9*Math.PI/10]
   outerAngles = [-5*Math.PI/10,   -Math.PI/10, 3*Math.PI/10, 7*Math.PI/10, -9*Math.PI/10]
@@ -61,6 +66,6 @@ $(document).ready () ->
 
   innerRadiusElement.rangeslider {
     polyfill: false
-    onSlide: refreshStarPath
+    onSlide: updateInnerRadius
   }
-  innerRadiusElement.val(50).change()
+  innerRadiusElement.val(0.5).change()
