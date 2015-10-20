@@ -20,7 +20,7 @@ pointAsString = (point) ->
 
 
 refreshStarPath = () ->
-  innerRadius = $("#inner-radius").slider("value") / 1000.0
+  innerRadius = $("#inner-radius").val()
   outerRadius = 1;
   innerAngles = [-7*Math.PI/10, -3*Math.PI/10,   Math.PI/10, 5*Math.PI/10,  9*Math.PI/10]
   outerAngles = [-5*Math.PI/10,   -Math.PI/10, 3*Math.PI/10, 7*Math.PI/10, -9*Math.PI/10]
@@ -55,12 +55,7 @@ $(document).ready () ->
   refreshForeground($("#fg-color-picker").spectrum("get"))
   refreshBackground($("#bg-color-picker").spectrum("get"))
 
-  $("#inner-radius").slider {
-    orientation: "horizontal"
-    range: "min"
-    max: 1000
-    value: 500
-    slide: refreshStarPath
-    change: refreshStarPath
-  }
-  $("#inner-radius").slider("value", 500)
+  $("#inner-radius").on("input", refreshStarPath)
+
+  $("#inner-radius").val(0.5)
+  refreshStarPath()

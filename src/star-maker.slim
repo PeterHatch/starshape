@@ -6,9 +6,6 @@ html lang="en"
 
     script src="jquery-2.1.4.js"
 
-    link rel="stylesheet" href="jquery-ui.css"
-    script src="jquery-ui.js"
-
     link rel="stylesheet" href="spectrum.css"
     script src="spectrum.js"
 
@@ -19,7 +16,7 @@ html lang="en"
 
     .controls
       h3 Inner Radius
-      div id="inner-radius"
+      input id="inner-radius" type="range" min="0" max="1" step="0.01" value="0.5"
 
       h3 Foreground color
       input id="fg-color-picker" class="color-picker" type="text"
