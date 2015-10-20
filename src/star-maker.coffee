@@ -1,3 +1,5 @@
+innerRadiusElement = null
+
 refreshForeground = (color) ->
   $("#swatch").css("color", color.toHexString())
 
@@ -20,7 +22,7 @@ pointAsString = (point) ->
 
 
 refreshStarPath = () ->
-  innerRadius = $("#inner-radius").val() / 100
+  innerRadius = innerRadiusElement.val() / 100
   outerRadius = 1;
   innerAngles = [-7*Math.PI/10, -3*Math.PI/10,   Math.PI/10, 5*Math.PI/10,  9*Math.PI/10]
   outerAngles = [-5*Math.PI/10,   -Math.PI/10, 3*Math.PI/10, 7*Math.PI/10, -9*Math.PI/10]
@@ -35,6 +37,8 @@ refreshStarPath = () ->
 
 
 $(document).ready () ->
+  innerRadiusElement = $("#inner-radius")
+
   $("#fg-color-picker").spectrum {
     flat: true
     showInput: true
@@ -55,8 +59,8 @@ $(document).ready () ->
   refreshForeground($("#fg-color-picker").spectrum("get"))
   refreshBackground($("#bg-color-picker").spectrum("get"))
 
-  $("#inner-radius").on("input", refreshStarPath)
-  $("#inner-radius").on("change", refreshStarPath)
-
-  $("#inner-radius").val(50)
-  refreshStarPath()
+  innerRadiusElement.rangeslider {
+    polyfill: false
+    onSlide: refreshStarPath
+  }
+  innerRadiusElement.val(50).change()
