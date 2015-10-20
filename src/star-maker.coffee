@@ -1,34 +1,12 @@
-hexFromRGB = (r, g, b) ->
-  hex = [
-    r.toString(16)
-    g.toString(16)
-    b.toString(16)
-  ]
-  $.each(hex, (nr, val) ->
-    if val.length == 1
-      hex[nr] = "0" + val
-  )
-  hex.join("").toUpperCase()
+refreshForeground = (color) ->
+  $("#swatch").css("color", color.toHexString())
 
 
-refreshForeground = () ->
-  red = $("#red-fg").slider("value")
-  green = $("#green-fg").slider("value")
-  blue = $("#blue-fg").slider("value")
-
-  hex = hexFromRGB(red, green, blue)
-
-  $("#swatch").css("color", "#" + hex)
-
-
-refreshBackground = () ->
-  red = $("#red-bg").slider("value")
-  green = $("#green-bg").slider("value")
-  blue = $("#blue-bg").slider("value")
-
-  hex = hexFromRGB(red, green, blue)
-
-  $("#swatch").css("background-color", "#" + hex)
+refreshBackground = (color) ->
+  if color?
+    $("#swatch").css("background-color", color.toHexString())
+  else
+    $("#swatch").css("background-color", "")
 
 
 polarToCartesian = (angle, distance) ->
@@ -57,24 +35,26 @@ refreshStarPath = () ->
 
 
 $(document).ready () ->
-  $("#red-fg, #green-fg, #blue-fg, #red-bg, #green-bg, #blue-bg").slider {
-    orientation: "horizontal"
-    range: "min"
-    max: 255
-    value: 127
-  }
-  $("#red-fg, #green-fg, #blue-fg").slider {
-    slide: refreshForeground
+  $("#fg-color-picker").spectrum {
+    flat: true
+    showInput: true
+    showButtons: false
+    color: "#fddc34"
+    move: refreshForeground
     change: refreshForeground
   }
-  $("#red-bg, #green-bg, #blue-bg").slider {
-    slide: refreshBackground,
+  $("#bg-color-picker").spectrum {
+    flat: true
+    showInput: true
+    showButtons: false
+    color: "black"
+    allowEmpty: true
+    move: refreshBackground
     change: refreshBackground
   }
-  $("#red-fg").slider("value", 253)
-  $("#green-fg").slider("value", 220)
-  $("#blue-fg").slider("value", 52)
-  $("#red-bg, #green-bg, #blue-bg").slider("value", 0)
+  refreshForeground($("#fg-color-picker").spectrum("get"))
+  refreshBackground($("#bg-color-picker").spectrum("get"))
+
   $("#inner-radius").slider {
     orientation: "horizontal"
     range: "min"

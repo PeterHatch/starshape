@@ -4,27 +4,28 @@ html lang="en"
     meta charset="utf-8"
     title Star Maker
 
-    link rel="stylesheet" href="jquery-ui.css"
     script src="jquery-2.1.4.js"
+
+    link rel="stylesheet" href="jquery-ui.css"
     script src="jquery-ui.js"
+
+    link rel="stylesheet" href="spectrum.css"
+    script src="spectrum.js"
 
     link rel="stylesheet" href="star-maker.css"
     script src="star-maker.js"
 
-  body class="ui-widget-content" style="border:0;"
+  body
 
-    h3 Inner Radius
-    #inner-radius
+    .controls
+      h3 Inner Radius
+      div id="inner-radius"
 
-    h3 Foreground color
-    #red-fg class="red"
-    #green-fg class="green"
-    #blue-fg class="blue"
+      h3 Foreground color
+      input id="fg-color-picker" class="color-picker" type="text"
 
-    h3 Background color
-    #red-bg class="red"
-    #green-bg class="green"
-    #blue-bg class="blue"
+      h3 Background color
+      input id="bg-color-picker" class="color-picker" type="text"
 
     svg id="swatch" viewBox="-1.1 -1.1 2.2 2.2"
       path id="star" d="M 1,0 L 0,1 -1,0 0,-1 Z" fill="currentColor"
