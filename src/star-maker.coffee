@@ -20,7 +20,7 @@ pointAsString = (point) ->
 
 
 refreshStarPath = () ->
-  innerRadius = $("#inner-radius").val()
+  innerRadius = $("#inner-radius").val() / 100
   outerRadius = 1;
   innerAngles = [-7*Math.PI/10, -3*Math.PI/10,   Math.PI/10, 5*Math.PI/10,  9*Math.PI/10]
   outerAngles = [-5*Math.PI/10,   -Math.PI/10, 3*Math.PI/10, 7*Math.PI/10, -9*Math.PI/10]
@@ -56,6 +56,7 @@ $(document).ready () ->
   refreshBackground($("#bg-color-picker").spectrum("get"))
 
   $("#inner-radius").on("input", refreshStarPath)
+  $("#inner-radius").on("change", refreshStarPath)
 
-  $("#inner-radius").val(0.5)
+  $("#inner-radius").val(50)
   refreshStarPath()
