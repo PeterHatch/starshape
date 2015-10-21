@@ -22,53 +22,62 @@ pointAsString = (point) ->
   "" + point.x + "," + point.y
 
 
-starPoints = () ->
+calculateInnerPoints = () ->
   innerRadius = $innerRadius.val()
-  outerRadius = 1;
   innerAngles = [-7*Math.PI/10, -3*Math.PI/10,   Math.PI/10, 5*Math.PI/10,  9*Math.PI/10]
+
+  innerAngles.map (angle) -> polarToCartesian(angle, innerRadius)
+
+innerPointStrings = () ->
+  calculateInnerPoints().map pointAsString
+
+calculateOuterPoints = () ->
+  outerRadius = 1
   outerAngles = [-5*Math.PI/10,   -Math.PI/10, 3*Math.PI/10, 7*Math.PI/10, -9*Math.PI/10]
 
-  points = []
-  for i in [0..4]
-    points.push polarToCartesian(innerAngles[i], innerRadius)
-    points.push polarToCartesian(outerAngles[i], outerRadius)
+  outerAngles.map (angle) -> polarToCartesian(angle, outerRadius)
 
-  points.map (point) -> pointAsString(point)
-
-
-starPointsLooped = () ->
-  points = starPoints()
-  points.push(points[0])
-
-  points
+outerPointStrings = () ->
+  calculateOuterPoints().map pointAsString
 
 
 drawLinearStar = () ->
-  points = starPoints()
+  innerPoints = innerPointStrings()
+  outerPoints = outerPointStrings()
+  points = _.flatten _.zip(innerPoints, outerPoints)
 
   pathString = "M " + points.shift() + " L "
-  for point in points
-    pathString += point + " "
-  pathString += "Z";
+  pathString += points.join(" ")
+  pathString += " Z";
 
   $("#star").attr("d", pathString);
 
 drawQuadraticStar = () ->
-  points = starPointsLooped()
+  innerPoints = innerPointStrings()
+  outerPoints = outerPointStrings()
 
-  pathString = "M " + points[0]
-  for i in [1..10] by 2
-    pathString += " Q " + points[i] + " " + points[i + 1]
-  pathString += " Z";
+  firstPoint = innerPoints[0]
+  innerPoints.push(innerPoints.shift())
+  points = _.zip(outerPoints, innerPoints)
+
+  sectionStrings = points.map ([outerPoint, innerPoint]) ->
+    " Q " + outerPoint + " " + innerPoint
+
+  pathString = "M " + firstPoint + sectionStrings.join('') + " Z"
   $("#star").attr("d", pathString);
 
 drawCubicStar = () ->
-  points = starPointsLooped()
+  innerPoints = innerPointStrings()
+  outerPoints = outerPointStrings()
 
-  pathString = "M " + points[0]
-  for i in [1..10] by 2
-    pathString += " C " + points[i] + " " + points[i] + " " + points[i + 1]
-  pathString += " Z";
+  firstPoint = innerPoints[0]
+  innerPoints.push(innerPoints.shift())
+  points = _.zip(outerPoints, innerPoints)
+
+  sectionStrings = points.map ([outerPoint, innerPoint]) ->
+    " C " + outerPoint + " " + outerPoint + " " + innerPoint
+
+  pathString = "M " + firstPoint + sectionStrings.join('') + " Z"
   $("#star").attr("d", pathString);
 
 
@@ -89,8 +98,8 @@ refreshStarPath = () ->
   drawStarFunction()
 
 
-updateInnerRadius = () ->
-  $(".rangeslider__handle", $innerRadius.$range).text($innerRadius.val())
+updateRadiusSlider = () ->
+  $(".rangeslider__handle", this.$range).text(this.value)
   refreshStarPath()
 
 
@@ -124,6 +133,6 @@ $(document).ready () ->
 
   $innerRadius.rangeslider {
     polyfill: false
-    onSlide: updateInnerRadius
+    onSlide: updateRadiusSlider
   }
   $innerRadius.val(0.5).change()
