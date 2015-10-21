@@ -1,4 +1,5 @@
 innerRadiusElement = null
+drawStarFunction = null
 
 refreshForeground = (color) ->
   $("#swatch").css("color", color.toHexString())
@@ -21,28 +22,71 @@ pointAsString = (point) ->
   "" + point.x + "," + point.y
 
 
+starPoints = () ->
+  innerRadius = innerRadiusElement.val()
+  outerRadius = 1;
+  innerAngles = [-7*Math.PI/10, -3*Math.PI/10,   Math.PI/10, 5*Math.PI/10,  9*Math.PI/10]
+  outerAngles = [-5*Math.PI/10,   -Math.PI/10, 3*Math.PI/10, 7*Math.PI/10, -9*Math.PI/10]
+
+  points = []
+  for i in [0..4]
+    points.push polarToCartesian(innerAngles[i], innerRadius)
+    points.push polarToCartesian(outerAngles[i], outerRadius)
+
+  points.map (point) -> pointAsString(point)
+
+
+starPointsLooped = () ->
+  points = starPoints()
+  points.push(points[0])
+
+  points
+
+
+drawLinearStar = () ->
+  points = starPoints()
+
+  pathString = "M " + points.shift() + " L "
+  for point in points
+    pathString += point + " "
+  pathString += "Z";
+
+  $("#star").attr("d", pathString);
+
+drawCubicStar = () ->
+  points = starPointsLooped()
+
+  pathString = "M " + points[0]
+  for i in [1..10] by 2
+    pathString += " C " + points[i] + " " + points[i] + " " + points[i + 1]
+  pathString += " Z";
+  $("#star").attr("d", pathString);
+
+
+setShapeToLinear = () ->
+  drawStarFunction = drawLinearStar
+  refreshStarPath()
+
+setShapeToCubic = () ->
+  drawStarFunction = drawCubicStar
+  refreshStarPath()
+
+
+refreshStarPath = () ->
+  drawStarFunction()
+
+
 updateInnerRadius = () ->
   $(".rangeslider__handle", innerRadiusElement.$range).text(innerRadiusElement.val())
   refreshStarPath()
 
 
-refreshStarPath = () ->
-  innerRadius = innerRadiusElement.val()
-  outerRadius = 1;
-  innerAngles = [-7*Math.PI/10, -3*Math.PI/10,   Math.PI/10, 5*Math.PI/10,  9*Math.PI/10]
-  outerAngles = [-5*Math.PI/10,   -Math.PI/10, 3*Math.PI/10, 7*Math.PI/10, -9*Math.PI/10]
-  innerPoints = innerAngles.map (angle) -> polarToCartesian(angle, innerRadius)
-  outerPoints = outerAngles.map (angle) -> polarToCartesian(angle, outerRadius)
-
-  pathString = "M " + pointAsString(innerPoints[0])
-  for i in [0...4]
-    pathString += " C " + pointAsString(outerPoints[i]) + " " + pointAsString(outerPoints[i]) + " " + pointAsString(innerPoints[i + 1]);
-  pathString += " C " + pointAsString(outerPoints[4]) + " " + pointAsString(outerPoints[4]) + " " + pointAsString(innerPoints[0]) + " Z";
-  $("#star").attr("d", pathString);
-
-
 $(document).ready () ->
   innerRadiusElement = $("#inner-radius")
+
+  $("#straight").change(setShapeToLinear)
+  $("#cubic").change(setShapeToCubic)
+  $("input[name=shape]:checked").change()
 
   $("#fg-color-picker").spectrum {
     flat: true
