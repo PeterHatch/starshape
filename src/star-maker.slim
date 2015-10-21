@@ -23,9 +23,14 @@ html lang="en"
       label: input id="straight"  type="radio" name="shape" checked="checked" Straight Lines
       label: input id="quadratic" type="radio" name="shape" Quadratic Bezier Curves
       label: input id="cubic"     type="radio" name="shape" Cubic Bezier Curves
+      label: input id="circular-tips" type="radio" name="shape" Rounded off with Circles
 
       h3 Inner Radius
       input id="inner-radius" type="range" min="0.01" max="1" step="0.01" value="0.5"
+
+      div id="straight-percentage-section"
+        h3 Straight Line Percentage
+        input id="straight-percentage" type="range" min="1" max="100" value="75"
 
       h3 Foreground color
       input id="fg-color-picker" class="color-picker" type="text"
