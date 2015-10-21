@@ -132,6 +132,19 @@ drawStarWithCircularTips = () ->
   pathString = "M " + sectionStrings.join(" L ") + " Z"
   $("#star").attr("d", pathString);
 
+drawStarWithQuadraticTips = () ->
+  innerPoints = calculateInnerPoints()
+  outerPoints = calculateOuterPoints()
+  intermediatePoints1 = calculateIntermediatePoints(innerPoints, outerPoints)
+  intermediatePoints2 = calculateIntermediatePointsCounterclockwise(innerPoints, outerPoints)
+
+  points = _.zip(innerPoints.map(pointAsString), intermediatePoints1.map(pointAsString), outerPoints.map(pointAsString), intermediatePoints2.map(pointAsString))
+
+  sectionStrings = points.map ([inner, intermediate1, outer, intermediate2]) ->
+    "#{ inner } L #{ intermediate1 } Q #{ outer } #{ intermediate2 }"
+  pathString = "M " + sectionStrings.join(" L ") + " Z"
+  $("#star").attr("d", pathString);
+
 
 setShapeToLinear = () ->
   drawStarFunction = drawLinearStar
@@ -147,6 +160,10 @@ setShapeToCubic = () ->
 
 setShapeToCircularTips = () ->
   drawStarFunction = drawStarWithCircularTips
+  refreshStarPath()
+
+setShapeToQuadraticTips = () ->
+  drawStarFunction = drawStarWithQuadraticTips
   refreshStarPath()
 
 
@@ -171,6 +188,7 @@ $(document).ready () ->
   $("#quadratic").change(setShapeToQuadratic)
   $("#cubic").change(setShapeToCubic)
   $("#circular-tips").change(setShapeToCircularTips)
+  $("#quadratic-tips").change(setShapeToQuadraticTips)
   $("input[name=shape]:checked").change()
 
   $("#fg-color-picker").spectrum {
