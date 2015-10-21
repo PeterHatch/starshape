@@ -53,6 +53,15 @@ drawLinearStar = () ->
 
   $("#star").attr("d", pathString);
 
+drawQuadraticStar = () ->
+  points = starPointsLooped()
+
+  pathString = "M " + points[0]
+  for i in [1..10] by 2
+    pathString += " Q " + points[i] + " " + points[i + 1]
+  pathString += " Z";
+  $("#star").attr("d", pathString);
+
 drawCubicStar = () ->
   points = starPointsLooped()
 
@@ -65,6 +74,10 @@ drawCubicStar = () ->
 
 setShapeToLinear = () ->
   drawStarFunction = drawLinearStar
+  refreshStarPath()
+
+setShapeToQuadratic = () ->
+  drawStarFunction = drawQuadraticStar
   refreshStarPath()
 
 setShapeToCubic = () ->
@@ -85,6 +98,7 @@ $(document).ready () ->
   innerRadiusElement = $("#inner-radius")
 
   $("#straight").change(setShapeToLinear)
+  $("#quadratic").change(setShapeToQuadratic)
   $("#cubic").change(setShapeToCubic)
   $("input[name=shape]:checked").change()
 
