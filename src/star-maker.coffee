@@ -1,4 +1,4 @@
-innerRadiusElement = null
+$innerRadius = null
 drawStarFunction = null
 
 refreshForeground = (color) ->
@@ -23,7 +23,7 @@ pointAsString = (point) ->
 
 
 starPoints = () ->
-  innerRadius = innerRadiusElement.val()
+  innerRadius = $innerRadius.val()
   outerRadius = 1;
   innerAngles = [-7*Math.PI/10, -3*Math.PI/10,   Math.PI/10, 5*Math.PI/10,  9*Math.PI/10]
   outerAngles = [-5*Math.PI/10,   -Math.PI/10, 3*Math.PI/10, 7*Math.PI/10, -9*Math.PI/10]
@@ -90,12 +90,12 @@ refreshStarPath = () ->
 
 
 updateInnerRadius = () ->
-  $(".rangeslider__handle", innerRadiusElement.$range).text(innerRadiusElement.val())
+  $(".rangeslider__handle", $innerRadius.$range).text($innerRadius.val())
   refreshStarPath()
 
 
 $(document).ready () ->
-  innerRadiusElement = $("#inner-radius")
+  $innerRadius = $("#inner-radius")
 
   $("#straight").change(setShapeToLinear)
   $("#quadratic").change(setShapeToQuadratic)
@@ -122,8 +122,8 @@ $(document).ready () ->
   refreshForeground($("#fg-color-picker").spectrum("get"))
   refreshBackground($("#bg-color-picker").spectrum("get"))
 
-  innerRadiusElement.rangeslider {
+  $innerRadius.rangeslider {
     polyfill: false
     onSlide: updateInnerRadius
   }
-  innerRadiusElement.val(0.5).change()
+  $innerRadius.val(0.5).change()
