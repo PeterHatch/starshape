@@ -159,10 +159,6 @@ drawStarWithCubicTips = () ->
   $("#star").attr("d", pathString);
 
 
-setShapeToLinear = () ->
-  drawStarFunction = drawLinearStar
-  refreshStarPath()
-
 setShapeToQuadratic = () ->
   drawStarFunction = drawQuadraticStar
   refreshStarPath()
@@ -185,7 +181,10 @@ setShapeToCubicTips = () ->
 
 
 refreshStarPath = () ->
-  drawStarFunction()
+  if $straightPercentage.val() == "100"
+    drawLinearStar()
+  else
+    drawStarFunction()
 
 
 updateRadiusSlider = () ->
@@ -201,7 +200,6 @@ $(document).ready () ->
   $innerRadius = $("#inner-radius")
   $straightPercentage = $("#straight-percentage")
 
-  $("#straight").change(setShapeToLinear)
   $("#quadratic").change(setShapeToQuadratic)
   $("#cubic").change(setShapeToCubic)
   $("#circular-tips").change(setShapeToCircularTips)
