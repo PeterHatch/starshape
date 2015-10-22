@@ -167,15 +167,15 @@ drawStarWithCubicTips = () ->
   $("#star").attr("d", pathString);
 
 
-setShapeToCircularTips = () ->
+setShapeToCircular = () ->
   drawStarFunction = drawStarWithCircularTips
   refreshStarPath()
 
-setShapeToQuadraticTips = () ->
+setShapeToQuadratic = () ->
   drawStarFunction = drawStarWithQuadraticTips
   refreshStarPath()
 
-setShapeToCubicTips = () ->
+setShapeToCubic = () ->
   drawStarFunction = drawStarWithCubicTips
   refreshStarPath()
 
@@ -200,9 +200,9 @@ $(document).ready () ->
   $innerRadius = $("#inner-radius")
   $straightPercentage = $("#straight-percentage")
 
-  $("#circular-tips").change(setShapeToCircularTips)
-  $("#quadratic-tips").change(setShapeToQuadraticTips)
-  $("#cubic-tips").change(setShapeToCubicTips)
+  $("#circular").change(setShapeToCircular)
+  $("#quadratic").change(setShapeToQuadratic)
+  $("#cubic").change(setShapeToCubic)
   $("input[name=shape]:checked").change()
 
   $("#fg-color-picker").spectrum {
