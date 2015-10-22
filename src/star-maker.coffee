@@ -133,6 +133,10 @@ drawStarWithCircularTips = () ->
   $("#star").attr("d", pathString);
 
 drawStarWithQuadraticTips = () ->
+  if $straightPercentage.val() == "0"
+    drawQuadraticStar()
+    return
+
   innerPoints = calculateInnerPoints()
   outerPoints = calculateOuterPoints()
   intermediatePoints1 = calculateIntermediatePoints(innerPoints, outerPoints)
@@ -146,6 +150,10 @@ drawStarWithQuadraticTips = () ->
   $("#star").attr("d", pathString);
 
 drawStarWithCubicTips = () ->
+  if $straightPercentage.val() == "0"
+    drawCubicStar()
+    return
+
   innerPoints = calculateInnerPoints()
   outerPoints = calculateOuterPoints()
   intermediatePoints1 = calculateIntermediatePoints(innerPoints, outerPoints)
@@ -158,14 +166,6 @@ drawStarWithCubicTips = () ->
   pathString = "M " + sectionStrings.join(" L ") + " Z"
   $("#star").attr("d", pathString);
 
-
-setShapeToQuadratic = () ->
-  drawStarFunction = drawQuadraticStar
-  refreshStarPath()
-
-setShapeToCubic = () ->
-  drawStarFunction = drawCubicStar
-  refreshStarPath()
 
 setShapeToCircularTips = () ->
   drawStarFunction = drawStarWithCircularTips
@@ -200,8 +200,6 @@ $(document).ready () ->
   $innerRadius = $("#inner-radius")
   $straightPercentage = $("#straight-percentage")
 
-  $("#quadratic").change(setShapeToQuadratic)
-  $("#cubic").change(setShapeToCubic)
   $("#circular-tips").change(setShapeToCircularTips)
   $("#quadratic-tips").change(setShapeToQuadraticTips)
   $("#cubic-tips").change(setShapeToCubicTips)
