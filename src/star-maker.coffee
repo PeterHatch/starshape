@@ -1,5 +1,6 @@
 $innerRadius = null
 $straightPercentage = null
+$controlPercentage = null
 drawStarFunction = null
 
 refreshForeground = (color) ->
@@ -61,9 +62,9 @@ calculateOuterPoints = () ->
 outerPointStrings = () ->
   calculateOuterPoints().map pointAsString
 
-calculateIntermediatePoints = (innerPoints, outerPoints) ->
+calculateIntermediatePoints = (innerPoints, outerPoints, percentage) ->
   fullDistance = calculateDistance(innerPoints[0], outerPoints[0])
-  straightDistance = ($straightPercentage.val() / 100) * fullDistance
+  straightDistance = (percentage / 100) * fullDistance
   angles = _.zip(innerPoints, outerPoints).map ([innerPoint, outerPoint]) -> calculateAngle(innerPoint, outerPoint)
 
   displacementVectors = angles.map (angle) -> polarToCartesian(angle, straightDistance)
@@ -72,10 +73,22 @@ calculateIntermediatePoints = (innerPoints, outerPoints) ->
     y: innerPoint.y + displacementVector.y
   }
 
-calculateIntermediatePointsCounterclockwise = (innerPoints, outerPoints) ->
+calculateLineToCurveTransitionPoints = (innerPoints, outerPoints) ->
+  percentage = $straightPercentage.val()
+  points1 = calculateIntermediatePoints(innerPoints, outerPoints, percentage)
+
   shiftedInnerPoints = innerPoints.slice(1)
   shiftedInnerPoints.push(innerPoints[0])
-  calculateIntermediatePoints(shiftedInnerPoints, outerPoints)
+  points2 = calculateIntermediatePoints(shiftedInnerPoints, outerPoints, percentage)
+
+  [points1, points2]
+
+calculateControlPoints = (intermediatePoints1, intermediatePoints2, outerPoints) ->
+  percentage = $controlPercentage.val()
+  points1 = calculateIntermediatePoints(intermediatePoints1, outerPoints, percentage)
+  points2 = calculateIntermediatePoints(intermediatePoints2, outerPoints, percentage)
+
+  [points1, points2]
 
 
 drawLinearStar = () ->
@@ -103,6 +116,8 @@ drawQuadraticStar = () ->
   pathString = "M " + firstPoint + sectionStrings.join('') + " Z"
   $("#star").attr("d", pathString);
 
+
+# Does not account for control points, so is no longer used
 drawCubicStar = () ->
   innerPoints = innerPointStrings()
   outerPoints = outerPointStrings()
@@ -120,8 +135,7 @@ drawCubicStar = () ->
 drawStarWithCircularTips = () ->
   innerPoints = calculateInnerPoints()
   outerPoints = calculateOuterPoints()
-  intermediatePoints1 = calculateIntermediatePoints(innerPoints, outerPoints)
-  intermediatePoints2 = calculateIntermediatePointsCounterclockwise(innerPoints, outerPoints)
+  [intermediatePoints1, intermediatePoints2] = calculateLineToCurveTransitionPoints(innerPoints, outerPoints)
 
   radius = calculateRadius(intermediatePoints1[0], outerPoints[0], intermediatePoints2[0])
 
@@ -139,8 +153,7 @@ drawStarWithQuadraticTips = () ->
 
   innerPoints = calculateInnerPoints()
   outerPoints = calculateOuterPoints()
-  intermediatePoints1 = calculateIntermediatePoints(innerPoints, outerPoints)
-  intermediatePoints2 = calculateIntermediatePointsCounterclockwise(innerPoints, outerPoints)
+  [intermediatePoints1, intermediatePoints2] = calculateLineToCurveTransitionPoints(innerPoints, outerPoints)
 
   points = _.zip(innerPoints.map(pointAsString), intermediatePoints1.map(pointAsString), outerPoints.map(pointAsString), intermediatePoints2.map(pointAsString))
 
@@ -150,19 +163,15 @@ drawStarWithQuadraticTips = () ->
   $("#star").attr("d", pathString);
 
 drawStarWithCubicTips = () ->
-  if $straightPercentage.val() == "0"
-    drawCubicStar()
-    return
-
   innerPoints = calculateInnerPoints()
   outerPoints = calculateOuterPoints()
-  intermediatePoints1 = calculateIntermediatePoints(innerPoints, outerPoints)
-  intermediatePoints2 = calculateIntermediatePointsCounterclockwise(innerPoints, outerPoints)
+  [intermediatePoints1, intermediatePoints2] = calculateLineToCurveTransitionPoints(innerPoints, outerPoints)
+  [controlPoints1, controlPoints2] = calculateControlPoints(intermediatePoints1, intermediatePoints2, outerPoints)
 
-  points = _.zip(innerPoints.map(pointAsString), intermediatePoints1.map(pointAsString), outerPoints.map(pointAsString), intermediatePoints2.map(pointAsString))
+  points = _.zip(innerPoints.map(pointAsString), intermediatePoints1.map(pointAsString), controlPoints1.map(pointAsString), controlPoints2.map(pointAsString), intermediatePoints2.map(pointAsString))
 
-  sectionStrings = points.map ([inner, intermediate1, outer, intermediate2]) ->
-    "#{ inner } L #{ intermediate1 } C #{ outer } #{ outer } #{ intermediate2 }"
+  sectionStrings = points.map ([inner, intermediate1, control1, control2, intermediate2]) ->
+    "#{ inner } L #{ intermediate1 } C #{ control1 } #{ control2 } #{ intermediate2 }"
   pathString = "M " + sectionStrings.join(" L ") + " Z"
   $("#star").attr("d", pathString);
 
@@ -199,6 +208,7 @@ updatePercentageSlider = () ->
 $(document).ready () ->
   $innerRadius = $("#inner-radius")
   $straightPercentage = $("#straight-percentage")
+  $controlPercentage = $("#control-percentage")
 
   $("#circular").change(setShapeToCircular)
   $("#quadratic").change(setShapeToQuadratic)
@@ -229,10 +239,17 @@ $(document).ready () ->
     polyfill: false
     onSlide: updateRadiusSlider
   }
-  $innerRadius.val(0.5).change()
+  regularPolygonInnerRadius = 1 - (2 / (1 + Math.sqrt(5)))
+  $innerRadius.val(regularPolygonInnerRadius).change()
 
   $straightPercentage.rangeslider {
     polyfill: false
     onSlide: updatePercentageSlider
   }
   $straightPercentage.val(75).change()
+
+  $controlPercentage.rangeslider {
+    polyfill: false
+    onSlide: updatePercentageSlider
+  }
+  $controlPercentage.val(100).change()
