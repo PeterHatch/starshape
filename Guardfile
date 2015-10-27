@@ -15,10 +15,6 @@
 #
 # and, you'll have to watch "config/Guardfile" instead of "Guardfile"
 
-guard 'rake', :task => 'compile' do
+guard 'rake', :task => 'build' do
   watch(%r{^src/.+$})
-end
-
-guard 'rake', :task => 'copy_assets' do
-  watch(%r{^assets/.+$})
 end

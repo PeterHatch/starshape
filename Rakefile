@@ -19,15 +19,9 @@ rule ".css" => [->(file) { file.pathmap("%{^compiled/,src/}X.sass") }, "compiled
 end
 
 
-task :copy_assets => Rake::FileList["assets", "assets/*"] do
-  cp_r "assets/.", "compiled"
-end
-
 directory "compiled"
-directory "assets"
 
-task :compile => [:html, :js, :css]
-task :build => [:compile, :copy_assets]
+task :build => [:html, :js, :css]
 task :default => :build
 
 task :clean do
