@@ -179,14 +179,17 @@ drawStarWithCubicTips = () ->
 
 setShapeToCircular = () ->
   drawStarFunction = drawStarWithCircularTips
+  updateUrlWithShape("circular")
   refreshStarPath()
 
 setShapeToQuadratic = () ->
   drawStarFunction = drawStarWithQuadraticTips
+  updateUrlWithShape("quadratic")
   refreshStarPath()
 
 setShapeToCubic = () ->
   drawStarFunction = drawStarWithCubicTips
+  updateUrlWithShape("cubic")
   refreshStarPath()
 
 
@@ -209,6 +212,11 @@ updatePercentageSlider = (position, value) ->
 updateUriQuery = (updateFunction) ->
   uri.search (updateFunction)
   history.replaceState(null, "", uri.resource())
+
+updateUrlWithShape = (value) ->
+  updateUriQuery (queryParams) ->
+    queryParams.s = value
+    return
 
 updateUrlWithRadius = (position, value) ->
   updateUriQuery (queryParams) ->
