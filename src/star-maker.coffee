@@ -245,23 +245,22 @@ $(document).ready () ->
   $("#" + options.s).prop("checked", true)
   $("input[name=shape]:checked").change()
 
-  $("#fg-color-picker").spectrum({
-    flat: true
+  $("#fg-color-picker").spectrum {
     showInput: true
-    showButtons: false
     color: options.fg
     move: refreshForeground
-  }).on("dragstop.spectrum", (_, value) -> updateUrlQuery("fg", value))
+    hide: refreshForeground
+    change: (color) -> updateUrlQuery("fg", color.toHex())
+  }
 
-  $("#bg-color-picker").spectrum({
-    flat: true
+  $("#bg-color-picker").spectrum {
     showInput: true
-    showButtons: false
     color: options.bg
     allowEmpty: true
     move: refreshBackground
-    change: refreshBackground
-  }).on("dragstop.spectrum", (_, value) -> updateUrlQuery("bg", value))
+    hide: refreshBackground
+    change: (color) -> updateUrlQuery("bg", if color isnt null then color.toHex() else null)
+  }
 
   refreshForeground($("#fg-color-picker").spectrum("get"))
   refreshBackground($("#bg-color-picker").spectrum("get"))

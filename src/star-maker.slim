@@ -20,27 +20,35 @@ html lang="en"
   body
 
     .controls
-      h3 Shape
-      label: input id="cubic"     type="radio" name="shape" checked="checked" Cubic Bezier Curves
-      label: input id="quadratic" type="radio" name="shape" Quadratic Bezier Curves
-      label: input id="circular"  type="radio" name="shape" Circular Arcs
+      h2 Shape
+      label
+        input id="cubic"     type="radio" name="shape" checked="checked"
+        | Cubic Bezier Curves
+      label
+        input id="quadratic" type="radio" name="shape"
+        | Quadratic Bezier Curves
+      label
+        input id="circular"  type="radio" name="shape"
+        | Circular Arcs
 
-      h3 Inner Radius
+      h4 Inner Radius
       input id="inner-radius" type="range" min="0.01" max="1" step="0.01" value="0.5"
 
       div id="straight-percentage-section"
-        h3 Straight Line Percentage
+        h4 Straight Line Percentage
         input id="straight-percentage" type="range" min="0" max="100" value="75"
 
       div id="control-point-section"
-        h3 Cubic Control Points Length Percentage
+        h4 Cubic Control Points Length Percentage
         input id="control-percentage" type="range" min="1" max="200" value="100"
 
-      h3 Foreground color
-      input id="fg-color-picker" class="color-picker" type="text"
-
-      h3 Background color
-      input id="bg-color-picker" class="color-picker" type="text"
+      h2 Colors
+      label
+        input id="fg-color-picker" class="color-picker" type="text"
+        |  Star
+      label
+        input id="bg-color-picker" class="color-picker" type="text"
+        |  Background
 
     svg id="swatch" viewBox="-1.1 -1.1 2.2 2.2"
       path id="star" d="M 1,0 L 0,1 -1,0 0,-1 Z" fill="currentColor"
