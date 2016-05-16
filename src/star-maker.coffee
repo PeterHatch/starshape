@@ -2,6 +2,7 @@ $innerRadius = null
 $straightPercentage = null
 $controlPercentage = null
 drawStarFunction = null
+uri = null
 
 refreshForeground = (color) ->
   $("#swatch").css("color", color.toHexString())
@@ -196,16 +197,67 @@ refreshStarPath = () ->
     drawStarFunction()
 
 
-updateRadiusSlider = () ->
-  $(".rangeslider__handle", this.$range).text(this.value)
+updateRadiusSlider = (position, value) ->
+  $(".rangeslider__handle", this.$range).text(value)
   refreshStarPath()
 
-updatePercentageSlider = () ->
-  $(".rangeslider__handle", this.$range).text(this.value + "%")
+updatePercentageSlider = (position, value) ->
+  $(".rangeslider__handle", this.$range).text(value + "%")
   refreshStarPath()
+
+
+updateUriQuery = (updateFunction) ->
+  uri.search (updateFunction)
+  history.replaceState(null, "", uri.resource())
+
+updateUrlWithRadius = (position, value) ->
+  updateUriQuery (queryParams) ->
+    queryParams.r = value
+    return
+
+updateUrlWithStraightPercentage = (position, value) ->
+  updateUriQuery (queryParams) ->
+    queryParams.l = value
+    return
+
+updateUrlWithControlPercentage = (position, value) ->
+  updateUriQuery (queryParams) ->
+    queryParams.c = value
+    return
+
+updateUrlWithForeground = (e, color) ->
+  updateUriQuery (queryParams) ->
+    queryParams.fg = color.toHex()
+    return
+
+updateUrlWithBackground = (e, color) ->
+  updateUriQuery (queryParams) ->
+    queryParams.bg = color.toHex()
+    return
+
+initializeOptions = () ->
+  uri = new URI()
+  options = uri.search(true)
+
+  if options.s == undefined
+    options.s = "cubic"
+  if options.r == undefined
+    options.r = 1 - (2 / (1 + Math.sqrt(5)))
+  if options.l == undefined
+    options.l = 75
+  if options.c == undefined
+    options.c = 100
+  if options.fg == undefined
+    options.fg = "fddc34"
+  if options.bg == undefined
+    options.bg = "000000"
+
+  options
 
 
 $(document).ready () ->
+  options = initializeOptions()
+
   $innerRadius = $("#inner-radius")
   $straightPercentage = $("#straight-percentage")
   $controlPercentage = $("#control-percentage")
@@ -213,43 +265,48 @@ $(document).ready () ->
   $("#circular").change(setShapeToCircular)
   $("#quadratic").change(setShapeToQuadratic)
   $("#cubic").change(setShapeToCubic)
+  $("#" + options.s).prop("checked", true)
   $("input[name=shape]:checked").change()
 
-  $("#fg-color-picker").spectrum {
+  $("#fg-color-picker").spectrum({
     flat: true
     showInput: true
     showButtons: false
-    color: "#fddc34"
+    color: options.fg
     move: refreshForeground
-    change: refreshForeground
-  }
-  $("#bg-color-picker").spectrum {
+    dragstop: updateUrlWithForeground
+  }).on("dragstop.spectrum", updateUrlWithForeground)
+
+  $("#bg-color-picker").spectrum({
     flat: true
     showInput: true
     showButtons: false
-    color: "black"
+    color: options.bg
     allowEmpty: true
     move: refreshBackground
     change: refreshBackground
-  }
+  }).on("dragstop.spectrum", updateUrlWithBackground)
+
   refreshForeground($("#fg-color-picker").spectrum("get"))
   refreshBackground($("#bg-color-picker").spectrum("get"))
 
   $innerRadius.rangeslider {
     polyfill: false
     onSlide: updateRadiusSlider
+    onSlideEnd: updateUrlWithRadius
   }
-  regularPolygonInnerRadius = 1 - (2 / (1 + Math.sqrt(5)))
-  $innerRadius.val(regularPolygonInnerRadius).change()
+  $innerRadius.val(options.r).change()
 
   $straightPercentage.rangeslider {
     polyfill: false
     onSlide: updatePercentageSlider
+    onSlideEnd: updateUrlWithStraightPercentage
   }
-  $straightPercentage.val(75).change()
+  $straightPercentage.val(options.l).change()
 
   $controlPercentage.rangeslider {
     polyfill: false
     onSlide: updatePercentageSlider
+    onSlideEnd: updateUrlWithControlPercentage
   }
-  $controlPercentage.val(100).change()
+  $controlPercentage.val(options.c).change()
