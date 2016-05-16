@@ -179,17 +179,17 @@ drawStarWithCubicTips = () ->
 
 setShapeToCircular = () ->
   drawStarFunction = drawStarWithCircularTips
-  updateUrlWithShape("circular")
+  updateUrlQuery("s", "circular")
   refreshStarPath()
 
 setShapeToQuadratic = () ->
   drawStarFunction = drawStarWithQuadraticTips
-  updateUrlWithShape("quadratic")
+  updateUrlQuery("s", "quadratic")
   refreshStarPath()
 
 setShapeToCubic = () ->
   drawStarFunction = drawStarWithCubicTips
-  updateUrlWithShape("cubic")
+  updateUrlQuery("s", "cubic")
   refreshStarPath()
 
 
@@ -200,48 +200,17 @@ refreshStarPath = () ->
     drawStarFunction()
 
 
-updateRadiusSlider = (position, value) ->
-  $(".rangeslider__handle", this.$range).text(value)
-  refreshStarPath()
-
-updatePercentageSlider = (position, value) ->
-  $(".rangeslider__handle", this.$range).text(value + "%")
+updateSlider = (sliderElement, value) ->
+  $(".rangeslider__handle", sliderElement.$range).text(value)
   refreshStarPath()
 
 
-updateUriQuery = (updateFunction) ->
-  uri.search (updateFunction)
+updateUrlQuery = (key, value) ->
+  uri.search (queryParams) ->
+    queryParams[key] = value
+    return
   history.replaceState(null, "", uri.resource())
 
-updateUrlWithShape = (value) ->
-  updateUriQuery (queryParams) ->
-    queryParams.s = value
-    return
-
-updateUrlWithRadius = (position, value) ->
-  updateUriQuery (queryParams) ->
-    queryParams.r = value
-    return
-
-updateUrlWithStraightPercentage = (position, value) ->
-  updateUriQuery (queryParams) ->
-    queryParams.l = value
-    return
-
-updateUrlWithControlPercentage = (position, value) ->
-  updateUriQuery (queryParams) ->
-    queryParams.c = value
-    return
-
-updateUrlWithForeground = (e, color) ->
-  updateUriQuery (queryParams) ->
-    queryParams.fg = color.toHex()
-    return
-
-updateUrlWithBackground = (e, color) ->
-  updateUriQuery (queryParams) ->
-    queryParams.bg = color.toHex()
-    return
 
 initializeOptions = () ->
   uri = new URI()
@@ -282,8 +251,7 @@ $(document).ready () ->
     showButtons: false
     color: options.fg
     move: refreshForeground
-    dragstop: updateUrlWithForeground
-  }).on("dragstop.spectrum", updateUrlWithForeground)
+  }).on("dragstop.spectrum", (_, value) -> updateUrlQuery("fg", value))
 
   $("#bg-color-picker").spectrum({
     flat: true
@@ -293,28 +261,28 @@ $(document).ready () ->
     allowEmpty: true
     move: refreshBackground
     change: refreshBackground
-  }).on("dragstop.spectrum", updateUrlWithBackground)
+  }).on("dragstop.spectrum", (_, value) -> updateUrlQuery("bg", value))
 
   refreshForeground($("#fg-color-picker").spectrum("get"))
   refreshBackground($("#bg-color-picker").spectrum("get"))
 
   $innerRadius.rangeslider {
     polyfill: false
-    onSlide: updateRadiusSlider
-    onSlideEnd: updateUrlWithRadius
+    onSlide: (_, value) -> updateSlider(this, value)
+    onSlideEnd: (_, value) -> updateUrlQuery("r", value)
   }
   $innerRadius.val(options.r).change()
 
   $straightPercentage.rangeslider {
     polyfill: false
-    onSlide: updatePercentageSlider
-    onSlideEnd: updateUrlWithStraightPercentage
+    onSlide: (_, value) -> updateSlider(this, value + "%")
+    onSlideEnd: (_, value) -> updateUrlQuery("l", value)
   }
   $straightPercentage.val(options.l).change()
 
   $controlPercentage.rangeslider {
     polyfill: false
-    onSlide: updatePercentageSlider
-    onSlideEnd: updateUrlWithControlPercentage
+    onSlide: (_, value) -> updateSlider(this, value + "%")
+    onSlideEnd: (_, value) -> updateUrlQuery("c", value)
   }
   $controlPercentage.val(options.c).change()
