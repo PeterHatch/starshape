@@ -18,6 +18,8 @@ html lang="en"
     script src="starshape.js"
 
   body
+    svg id="swatch" viewBox="-1.1 -1.1 2.2 2.2"
+      path id="star" d="M 1,0 L 0,1 -1,0 0,-1 Z" fill="currentColor"
 
     .controls
       h2 Shape
@@ -31,8 +33,9 @@ html lang="en"
         input id="circular"  type="radio" name="shape"
         | Circular Arcs
 
-      h4 Inner Radius
-      input id="inner-radius" type="range" min="0.01" max="1" step="0.01" value="0.5"
+      div id="inner-radius-section"
+        h4 Inner Radius
+        input id="inner-radius" type="range" min="0.01" max="1" step="0.01" value="0.5"
 
       div id="straight-percentage-section"
         h4 Straight Line Percentage
@@ -49,6 +52,3 @@ html lang="en"
       label
         input id="bg-color-picker" class="color-picker" type="text"
         |  Background
-
-    svg id="swatch" viewBox="-1.1 -1.1 2.2 2.2"
-      path id="star" d="M 1,0 L 0,1 -1,0 0,-1 Z" fill="currentColor"
