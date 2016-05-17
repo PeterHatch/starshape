@@ -118,21 +118,6 @@ drawQuadraticStar = () ->
   $("#star").attr("d", pathString);
 
 
-# Does not account for control points, so is no longer used
-drawCubicStar = () ->
-  innerPoints = innerPointStrings()
-  outerPoints = outerPointStrings()
-
-  firstPoint = innerPoints[0]
-  innerPoints.push(innerPoints.shift())
-  points = _.zip(outerPoints, innerPoints)
-
-  sectionStrings = points.map ([outerPoint, innerPoint]) ->
-    " C " + outerPoint + " " + outerPoint + " " + innerPoint
-
-  pathString = "M " + firstPoint + sectionStrings.join('') + " Z"
-  $("#star").attr("d", pathString);
-
 drawStarWithCircularTips = () ->
   innerPoints = calculateInnerPoints()
   outerPoints = calculateOuterPoints()
@@ -216,17 +201,12 @@ initializeOptions = () ->
   uri = new URI()
   options = uri.search(true)
 
-  if options.s == undefined
-    options.s = "cubic"
-  if options.r == undefined
-    options.r = 1 - (2 / (1 + Math.sqrt(5)))
-  if options.l == undefined
-    options.l = 75
-  if options.c == undefined
-    options.c = 100
-  if options.fg == undefined
-    options.fg = "fddc34"
-  if options.bg == undefined
+  options.s ?= "cubic"
+  options.r ?= 1 - (2 / (1 + Math.sqrt(5)))
+  options.l ?= 75
+  options.c ?= 100
+  options.fg ?= "fddc34"
+  if options.bg == undefined    # null is a valid value for bg, so don't replace it with the default
     options.bg = "000000"
 
   options
