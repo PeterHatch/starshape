@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Starshape</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.18.0/URI.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.1.1/rangeslider.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.1.1/rangeslider.min.js"></script>
+    <link href="starshape.css" rel="stylesheet" />
+    <script src="starshape.js"></script>
+  </head>
+  <body>
+    <svg id="swatch" viewBox="-1.1 -1.1 2.2 2.2"><path d="M 1,0 L 0,1 -1,0 0,-1 Z" fill="currentColor" id="star"></path></svg>
+    <div class="controls">
+      <h2>
+        Colors
+      </h2>
+      <label><input class="color-picker" id="fg-color-picker" type="text" /> Star</label><label><input class="color-picker" id="bg-color-picker" type="text" /> Background</label>
+      <h2>
+        Shape
+      </h2>
+      <label><input checked="checked" id="cubic" name="shape" type="radio" />Cubic Bezier Curves</label><label><input id="quadratic" name="shape" type="radio" />Quadratic Bezier Curves</label><label><input id="circular" name="shape" type="radio" />Circular Arcs</label>
+      <div id="inner-radius-section">
+        <h4>
+          Inner Radius
+        </h4>
+        <input id="inner-radius" max="0.75" min="0.25" step="0.01" type="range" value="0.5" />
+      </div>
+      <div id="straight-percentage-section">
+        <h4>
+          Straight Line Percentage
+        </h4>
+        <input id="straight-percentage" max="100" min="0" type="range" value="75" />
+      </div>
+      <div id="control-point-section">
+        <h4>
+          Cubic Control Points Length Percentage
+        </h4>
+        <input id="control-percentage" max="200" min="1" type="range" value="100" />
+      </div>
+    </div>
+  </body>
+</html>

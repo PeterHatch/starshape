@@ -1,0 +1,37 @@
+body {
+  margin: 0;
+  display: flex; }
+
+svg {
+  width: 100vh;
+  height: 100vh;
+  margin: 0; }
+
+.controls {
+  margin: 0 0.5em 0 1em;
+  display: flex;
+  flex-flow: column;
+  max-height: 100vh;
+  overflow: auto; }
+
+h2 {
+  font-family: sans-serif;
+  font-size: 1.5em;
+  font-weight: normal;
+  font-variant: small-caps;
+  margin-top: 0.5em;
+  margin-bottom: 0.25em; }
+
+h4 {
+  margin-bottom: 0.5em; }
+
+label {
+  display: block; }
+
+.rangeslider__handle {
+  line-height: 40px;
+  text-align: center; }
+  .rangeslider__handle:after {
+    background: 0; }
+
+/*# sourceMappingURL=starshape.css.map */
