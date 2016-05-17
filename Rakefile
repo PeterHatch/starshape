@@ -5,11 +5,10 @@ rule ".html" => [->(file) { file.pathmap("%{^compiled/,src/}X.slim") }, "compile
 end
 
 
-task :js => "compiled/starshape.js"
+task :js => Rake::FileList["src/*.coffee"].pathmap("%{^src/,compiled/}X.js")
 
-source_files = Rake::FileList["src/*.coffee"]
-file "compiled/starshape.js" => source_files + ["compiled"] do |t|
-	sh "coffee --compile --map --join compiled/starshape.js #{source_files}"
+rule ".js" => [->(file) { file.pathmap("%{^compiled/,src/}X.coffee") }, "compiled"] do |t|
+  sh "coffee --compile --map --output compiled #{t.source}"
 end
 
 
