@@ -22,6 +22,14 @@ html lang="en"
       path id="star" d="M 1,0 L 0,1 -1,0 0,-1 Z" fill="currentColor"
 
     .controls
+      h2 Colors
+      label
+        input id="fg-color-picker" class="color-picker" type="text"
+        |  Star
+      label
+        input id="bg-color-picker" class="color-picker" type="text"
+        |  Background
+
       h2 Shape
       label
         input id="cubic"     type="radio" name="shape" checked="checked"
@@ -44,11 +52,3 @@ html lang="en"
       div id="control-point-section"
         h4 Cubic Control Points Length Percentage
         input id="control-percentage" type="range" min="1" max="200" value="100"
-
-      h2 Colors
-      label
-        input id="fg-color-picker" class="color-picker" type="text"
-        |  Star
-      label
-        input id="bg-color-picker" class="color-picker" type="text"
-        |  Background

@@ -16,16 +16,19 @@ refreshBackground = (color) ->
 
 setShapeToCircular = () ->
   drawStarFunction = drawStarWithCircularTips
+  $("#control-point-section").css("visibility", "collapse")
   updateUrlQuery("s", "circular")
   refreshStarPath()
 
 setShapeToQuadratic = () ->
   drawStarFunction = drawStarWithQuadraticTips
+  $("#control-point-section").css("visibility", "collapse")
   updateUrlQuery("s", "quadratic")
   refreshStarPath()
 
 setShapeToCubic = () ->
   drawStarFunction = drawStarWithCubicTips
+  $("#control-point-section").css("visibility", "visible")
   updateUrlQuery("s", "cubic")
   refreshStarPath()
 
