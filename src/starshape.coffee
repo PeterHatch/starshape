@@ -174,7 +174,9 @@ calculateOuterPoints = () ->
 outerPointStrings = () ->
   calculateOuterPoints().map pointAsString
 
-calculateIntermediatePoints = (innerPoints, outerPoints, percentage) ->
+# This functions calculates the points in between each set of inner and outer points.
+# If there are five points in each, there will be five in the output.
+calculateSimpleIntermediatePoints = (innerPoints, outerPoints, percentage) ->
   fullDistance = calculateDistance(innerPoints[0], outerPoints[0])
   straightDistance = (percentage / 100) * fullDistance
   angles = _.zip(innerPoints, outerPoints).map ([innerPoint, outerPoint]) -> calculateAngle(innerPoint, outerPoint)
@@ -185,22 +187,29 @@ calculateIntermediatePoints = (innerPoints, outerPoints, percentage) ->
     y: innerPoint.y + displacementVector.y
   }
 
-calculateLineToCurveTransitionPoints = (innerPoints, outerPoints) ->
-  percentage = $straightPercentage.val()
-  points1 = calculateIntermediatePoints(innerPoints, outerPoints, percentage)
+calculateIntermediatePoints = (innerPoints1, innerPoints2, outerPoints, percentage) ->
+  points1 = calculateSimpleIntermediatePoints(innerPoints1, outerPoints, percentage)
+  points2 = calculateSimpleIntermediatePoints(innerPoints2, outerPoints, percentage)
 
+  [points1, points2]
+
+calculateIntermediatePointsComingAndGoing = (innerPoints, outerPoints, percentage) ->
   shiftedInnerPoints = innerPoints.slice(1)
   shiftedInnerPoints.push(innerPoints[0])
-  points2 = calculateIntermediatePoints(shiftedInnerPoints, outerPoints, percentage)
+  calculateIntermediatePoints(innerPoints, shiftedInnerPoints, outerPoints, percentage)
 
-  [points1, points2]
 
-calculateControlPoints = (intermediatePoints1, intermediatePoints2, outerPoints) ->
+calculateLineToCurveTransitionPoints = (innerPoints, outerPoints) ->
+  percentage = $straightPercentage.val()
+  calculateIntermediatePointsComingAndGoing(innerPoints, outerPoints, percentage)
+
+calculateControlPoints = (innerPoints, outerPoints) ->
   percentage = $controlPercentage.val()
-  points1 = calculateIntermediatePoints(intermediatePoints1, outerPoints, percentage)
-  points2 = calculateIntermediatePoints(intermediatePoints2, outerPoints, percentage)
+  calculateIntermediatePointsComingAndGoing(innerPoints, outerPoints, percentage)
 
-  [points1, points2]
+calculateControlPointsFromIntermediate = (intermediatePoints1, intermediatePoints2, outerPoints) ->
+  percentage = $controlPercentage.val()
+  calculateIntermediatePoints(intermediatePoints1, intermediatePoints2, outerPoints, percentage)
 
 
 drawLinearStar = () ->
@@ -227,6 +236,21 @@ drawQuadraticStar = () ->
 
   pathString = "M " + firstPoint + sectionStrings.join('') + " Z"
   $("#star").attr("d", pathString);
+
+drawCubicStar = () ->
+  innerPoints = calculateInnerPoints()
+  outerPoints = calculateOuterPoints()
+  [controlPoints1, controlPoints2] = calculateControlPoints(innerPoints, outerPoints)
+
+  firstPoint = pointAsString(innerPoints[0])
+  innerPoints.push(innerPoints.shift())
+  points = _.zip(controlPoints1.map(pointAsString), controlPoints2.map(pointAsString), innerPoints.map(pointAsString))
+
+  sectionStrings = points.map ([control1, control2, inner]) ->
+    " C #{ control1 } #{ control2 } #{ inner }"
+
+  pathString = "M #{ firstPoint } " + sectionStrings.join('') + " Z"
+  $("#star").attr("d", pathString)
 
 
 drawStarWithCircularTips = () ->
@@ -260,10 +284,14 @@ drawStarWithQuadraticTips = () ->
   $("#star").attr("d", pathString);
 
 drawStarWithCubicTips = () ->
+  if $straightPercentage.val() == "0"
+    drawCubicStar()
+    return
+
   innerPoints = calculateInnerPoints()
   outerPoints = calculateOuterPoints()
   [intermediatePoints1, intermediatePoints2] = calculateLineToCurveTransitionPoints(innerPoints, outerPoints)
-  [controlPoints1, controlPoints2] = calculateControlPoints(intermediatePoints1, intermediatePoints2, outerPoints)
+  [controlPoints1, controlPoints2] = calculateControlPointsFromIntermediate(intermediatePoints1, intermediatePoints2, outerPoints)
 
   points = _.zip(innerPoints.map(pointAsString), intermediatePoints1.map(pointAsString), controlPoints1.map(pointAsString), controlPoints2.map(pointAsString), intermediatePoints2.map(pointAsString))
 
