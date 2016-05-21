@@ -219,9 +219,9 @@ drawLinearStar = () ->
 
   pathString = "M " + points.shift() + " L "
   pathString += points.join(" ")
-  pathString += " Z";
+  pathString += " Z"
 
-  $("#star").attr("d", pathString);
+  $("#star").attr("d", pathString)
 
 drawQuadraticStar = () ->
   innerPoints = innerPointStrings()
@@ -235,7 +235,7 @@ drawQuadraticStar = () ->
     " Q " + outerPoint + " " + innerPoint
 
   pathString = "M " + firstPoint + sectionStrings.join('') + " Z"
-  $("#star").attr("d", pathString);
+  $("#star").attr("d", pathString)
 
 drawCubicStar = () ->
   innerPoints = calculateInnerPoints()
@@ -265,7 +265,7 @@ drawStarWithCircularTips = () ->
   sectionStrings = points.map ([inner, intermediate1, intermediate2]) ->
     "#{ inner } L #{ intermediate1 } A #{ radius } #{ radius } 0 0 1 #{ intermediate2 }"
   pathString = "M " + sectionStrings.join(" L ") + " Z"
-  $("#star").attr("d", pathString);
+  $("#star").attr("d", pathString)
 
 drawStarWithQuadraticTips = () ->
   if $straightPercentage.val() == "0"
@@ -281,7 +281,7 @@ drawStarWithQuadraticTips = () ->
   sectionStrings = points.map ([inner, intermediate1, outer, intermediate2]) ->
     "#{ inner } L #{ intermediate1 } Q #{ outer } #{ intermediate2 }"
   pathString = "M " + sectionStrings.join(" L ") + " Z"
-  $("#star").attr("d", pathString);
+  $("#star").attr("d", pathString)
 
 drawStarWithCubicTips = () ->
   if $straightPercentage.val() == "0"
@@ -298,4 +298,4 @@ drawStarWithCubicTips = () ->
   sectionStrings = points.map ([inner, intermediate1, control1, control2, intermediate2]) ->
     "#{ inner } L #{ intermediate1 } C #{ control1 } #{ control2 } #{ intermediate2 }"
   pathString = "M " + sectionStrings.join(" L ") + " Z"
-  $("#star").attr("d", pathString);
+  $("#star").attr("d", pathString)
