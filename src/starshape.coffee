@@ -1,6 +1,8 @@
 $innerRadius = null
 $straightPercentage = null
 $controlPercentage = null
+$controlAngle = null
+$controlDistance = null
 drawStarFunction = null
 uri = null
 
@@ -16,20 +18,42 @@ refreshBackground = (color) ->
 
 setShapeToCircular = () ->
   drawStarFunction = drawStarWithCircularTips
+  $("#inner-radius-section").css("visibility", "visible")
+  $("#straight-percentage-section").css("visibility", "visible")
   $("#control-point-section").css("visibility", "collapse")
+  $("#control-point-angle-section").css("visibility", "collapse")
+  $("#control-point-distance-section").css("visibility", "collapse")
   updateUrlQuery("s", "circular")
   refreshStarPath()
 
 setShapeToQuadratic = () ->
   drawStarFunction = drawStarWithQuadraticTips
+  $("#inner-radius-section").css("visibility", "visible")
+  $("#straight-percentage-section").css("visibility", "visible")
   $("#control-point-section").css("visibility", "collapse")
+  $("#control-point-angle-section").css("visibility", "collapse")
+  $("#control-point-distance-section").css("visibility", "collapse")
   updateUrlQuery("s", "quadratic")
   refreshStarPath()
 
 setShapeToCubic = () ->
   drawStarFunction = drawStarWithCubicTips
+  $("#inner-radius-section").css("visibility", "visible")
+  $("#straight-percentage-section").css("visibility", "visible")
   $("#control-point-section").css("visibility", "visible")
+  $("#control-point-angle-section").css("visibility", "collapse")
+  $("#control-point-distance-section").css("visibility", "collapse")
   updateUrlQuery("s", "cubic")
+  refreshStarPath()
+
+setShapeToCrossingCubic = () ->
+  drawStarFunction = drawCrossingCubicStar
+  $("#inner-radius-section").css("visibility", "collapse")
+  $("#straight-percentage-section").css("visibility", "collapse")
+  $("#control-point-section").css("visibility", "collapse")
+  $("#control-point-angle-section").css("visibility", "visible")
+  $("#control-point-distance-section").css("visibility", "visible")
+  updateUrlQuery("s", "crossingcubic")
   refreshStarPath()
 
 
@@ -56,10 +80,12 @@ initializeOptions = () ->
   uri = new URI()
   options = uri.search(true)
 
-  options.s ?= "cubic"
+  options.s ?= "crossingcubic"
   options.r ?= 1 - (2 / (1 + Math.sqrt(5)))
   options.l ?= 75
   options.c ?= 100
+  options.ca ?= 180
+  options.cd ?= 0.14
   options.fg ?= "fddc34"
   if options.bg == undefined    # null is a valid value for bg, so don't replace it with the default
     options.bg = "000000"
@@ -73,10 +99,13 @@ $(document).ready () ->
   $innerRadius = $("#inner-radius")
   $straightPercentage = $("#straight-percentage")
   $controlPercentage = $("#control-percentage")
+  $controlAngle = $("#control-angle")
+  $controlDistance = $("#control-distance")
 
   $("#circular").change(setShapeToCircular)
   $("#quadratic").change(setShapeToQuadratic)
   $("#cubic").change(setShapeToCubic)
+  $("#crossingcubic").change(setShapeToCrossingCubic)
   $("#" + options.s).prop("checked", true)
   $("input[name=shape]:checked").change()
 
@@ -121,6 +150,19 @@ $(document).ready () ->
   }
   $controlPercentage.val(options.c).change()
 
+  $controlAngle.rangeslider {
+    polyfill: false
+    onSlide: (_, value) -> updateSlider(this, value)
+    onSlideEnd: (_, value) -> updateUrlQuery("ca", value)
+  }
+  $controlAngle.val(options.ca).change()
+
+  $controlDistance.rangeslider {
+    polyfill: false
+    onSlide: (_, value) -> updateSlider(this, value)
+    onSlideEnd: (_, value) -> updateUrlQuery("cd", value)
+  }
+  $controlDistance.val(options.cd).change()
 
 
 ## Math functions for calculating star shapes
@@ -134,6 +176,12 @@ polarToCartesian = (angle, distance) ->
 
 pointAsString = (point) ->
   "" + point.x + "," + point.y
+
+addPoints = ([point1, point2]) ->
+  {
+    x: point1.x + point2.x
+    y: point1.y + point2.y
+  }
 
 
 calculateDistance = (point1, point2) ->
@@ -165,14 +213,14 @@ calculateInnerPoints = () ->
 innerPointStrings = () ->
   calculateInnerPoints().map pointAsString
 
-calculateOuterPoints = () ->
-  outerRadius = 1
-  outerAngles = [-5*Math.PI/10,   -Math.PI/10, 3*Math.PI/10, 7*Math.PI/10, -9*Math.PI/10]
+outerAngles = () ->
+  [-5*Math.PI/10,   -Math.PI/10, 3*Math.PI/10, 7*Math.PI/10, -9*Math.PI/10]
 
-  outerAngles.map (angle) -> polarToCartesian(angle, outerRadius)
+calculateOuterPoints = (radius = 1) ->
+  outerAngles().map (angle) -> polarToCartesian(angle, radius)
 
-outerPointStrings = () ->
-  calculateOuterPoints().map pointAsString
+outerPointStrings = (radius = 1) ->
+  calculateOuterPoints(radius).map pointAsString
 
 # This functions calculates the points in between each set of inner and outer points.
 # If there are five points in each, there will be five in the output.
@@ -182,10 +230,7 @@ calculateSimpleIntermediatePoints = (innerPoints, outerPoints, percentage) ->
   angles = _.zip(innerPoints, outerPoints).map ([innerPoint, outerPoint]) -> calculateAngle(innerPoint, outerPoint)
 
   displacementVectors = angles.map (angle) -> polarToCartesian(angle, straightDistance)
-  _.zip(innerPoints, displacementVectors).map ([innerPoint, displacementVector]) -> {
-    x: innerPoint.x + displacementVector.x
-    y: innerPoint.y + displacementVector.y
-  }
+  _.zip(innerPoints, displacementVectors).map(addPoints)
 
 calculateIntermediatePoints = (innerPoints1, innerPoints2, outerPoints, percentage) ->
   points1 = calculateSimpleIntermediatePoints(innerPoints1, outerPoints, percentage)
@@ -210,6 +255,25 @@ calculateControlPoints = (innerPoints, outerPoints) ->
 calculateControlPointsFromIntermediate = (intermediatePoints1, intermediatePoints2, outerPoints) ->
   percentage = $controlPercentage.val()
   calculateIntermediatePoints(intermediatePoints1, intermediatePoints2, outerPoints, percentage)
+
+crossingCubicPoints = () ->
+  outerPoints = calculateOuterPoints()
+  controlAngle = $controlAngle.val()
+  controlDistance = $controlDistance.val()
+
+  controlAngle = (controlAngle / 2) * (Math.PI / 180)
+  angles = outerAngles()
+  controlAngles1 = angles.map (angle) ->
+    angle + Math.PI - controlAngle
+  controlAngles2 = angles.map (angle) ->
+    angle + Math.PI + controlAngle
+
+  displacement1 = controlAngles1.map (angle) -> polarToCartesian(angle, controlDistance)
+  displacement2 = controlAngles2.map (angle) -> polarToCartesian(angle, controlDistance)
+  controlPoints1 = _.zip(outerPoints, displacement1).map(addPoints)
+  controlPoints2 = _.zip(outerPoints, displacement2).map(addPoints)
+
+  [outerPoints.map(pointAsString), controlPoints1.map(pointAsString), controlPoints2.map(pointAsString)]
 
 
 drawLinearStar = () ->
@@ -247,9 +311,9 @@ drawCubicStar = () ->
   points = _.zip(controlPoints1.map(pointAsString), controlPoints2.map(pointAsString), innerPoints.map(pointAsString))
 
   sectionStrings = points.map ([control1, control2, inner]) ->
-    " C #{ control1 } #{ control2 } #{ inner }"
+    "C #{ control1 } #{ control2 } #{ inner }"
 
-  pathString = "M #{ firstPoint } " + sectionStrings.join('') + " Z"
+  pathString = "M #{ firstPoint } " + sectionStrings.join(" ") + " Z"
   $("#star").attr("d", pathString)
 
 
@@ -298,4 +362,15 @@ drawStarWithCubicTips = () ->
   sectionStrings = points.map ([inner, intermediate1, control1, control2, intermediate2]) ->
     "#{ inner } L #{ intermediate1 } C #{ control1 } #{ control2 } #{ intermediate2 }"
   pathString = "M " + sectionStrings.join(" L ") + " Z"
+  $("#star").attr("d", pathString)
+
+
+drawCrossingCubicStar = () ->
+  [outer, control1, control2] = crossingCubicPoints()
+  pathString = "M #{outer[0]} C #{control1[0]} #{control2[2]} #{outer[2]}
+                              C #{control1[2]} #{control2[4]} #{outer[4]}
+                              C #{control1[4]} #{control2[1]} #{outer[1]}
+                              C #{control1[1]} #{control2[3]} #{outer[3]}
+                              C #{control1[3]} #{control2[0]} #{outer[0]}
+                              Z"
   $("#star").attr("d", pathString)
