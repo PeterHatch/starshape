@@ -23,7 +23,7 @@
       <h2>
         Shape
       </h2>
-      <label><input checked="checked" id="cubic" name="shape" type="radio" />Cubic Bezier Curves</label><label><input id="quadratic" name="shape" type="radio" />Quadratic Bezier Curves</label><label><input id="circular" name="shape" type="radio" />Circular Arcs</label>
+      <label><input checked="checked" id="crossingcubic" name="shape" type="radio" />Crossing Cubic Bezier Curves</label><label><input id="cubic" name="shape" type="radio" />Cubic Bezier Curves</label><label><input id="quadratic" name="shape" type="radio" />Quadratic Bezier Curves</label><label><input id="circular" name="shape" type="radio" />Circular Arcs</label>
       <div id="inner-radius-section">
         <h4>
           Inner Radius
@@ -38,9 +38,21 @@
       </div>
       <div id="control-point-section">
         <h4>
-          Cubic Control Points Length Percentage
+          Control Point Length Percentage
         </h4>
         <input id="control-percentage" max="200" min="1" type="range" value="100" />
+      </div>
+      <div id="control-point-angle-section">
+        <h4>
+          Control Point Angle
+        </h4>
+        <input id="control-angle" max="180" min="0" type="range" value="180" />
+      </div>
+      <div id="control-point-distance-section">
+        <h4>
+          Control Point Distance
+        </h4>
+        <input id="control-distance" max="1.0" min="0.01" step="0.01" type="range" value="0.25" />
       </div>
     </div>
   </body>
