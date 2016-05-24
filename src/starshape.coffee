@@ -163,22 +163,19 @@ $(document).ready () ->
 
 ## Math functions for calculating star shapes
 
+class Point
+  constructor: (@x, @y) ->
+
+  toString: () ->
+    "#{@x},#{@y}"
 
 polarToCartesian = (angle, distance) ->
   x = Math.cos(angle) * distance
   y = Math.sin(angle) * distance
-  {x: x, y: y}
-
-
-pointAsString = (point) ->
-  "" + point.x + "," + point.y
+  new Point(x, y)
 
 addPoints = ([point1, point2]) ->
-  {
-    x: point1.x + point2.x
-    y: point1.y + point2.y
-  }
-
+  new Point(point1.x + point2.x, point1.y + point2.y)
 
 calculateDistance = (point1, point2) ->
   Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2))
@@ -236,10 +233,7 @@ innerStarPoints = (innerRadius) ->
   outer = outerPoints()
   inner = innerPoints(innerRadius)
 
-  return [
-    outer.map(pointAsString)
-    inner.map(pointAsString)
-  ]
+  return [outer, inner]
 
 linearStarPoints = innerStarPoints
 quadraticStarPoints = innerStarPoints
@@ -249,12 +243,7 @@ innerAndIntermediatePoints = (innerRadius, percentage) ->
   inner = innerPoints(innerRadius)
   [intermediate1, intermediate2] = calculateIntermediatePointsComingAndGoing(inner, outer, percentage)
 
-  return [
-    outer.map(pointAsString)
-    inner.map(pointAsString)
-    intermediate1.map(pointAsString)
-    intermediate2.map(pointAsString)
-  ]
+  return [outer, inner, intermediate1, intermediate2]
 
 starWithQuadraticTipsPoints = innerAndIntermediatePoints
 
@@ -263,18 +252,10 @@ cubicStarPoints = (innerRadius, controlPercentage) ->
   return [inner, control1, control2]
 
 starWithCircularTipsPoints = (innerRadius, straightPercentage) ->
-  outer = outerPoints()
-  inner = innerPoints(innerRadius)
-  [intermediate1, intermediate2] = calculateIntermediatePointsComingAndGoing(inner, outer, straightPercentage)
-
+  [outer, inner, intermediate1, intermediate2] = innerAndIntermediatePoints(innerRadius, straightPercentage)
   radius = calculateRadius(intermediate1[0], outer[0], intermediate2[0])
 
-  return [
-    inner.map(pointAsString)
-    intermediate1.map(pointAsString)
-    intermediate2.map(pointAsString)
-    radius
-  ]
+  return [inner, intermediate1, intermediate2, radius]
 
 starWithCubicTipsPoints = (innerRadius, straightPercentage, controlPercentage) ->
   outer = outerPoints()
@@ -282,13 +263,7 @@ starWithCubicTipsPoints = (innerRadius, straightPercentage, controlPercentage) -
   [intermediate1, intermediate2] = calculateIntermediatePointsComingAndGoing(inner, outer, straightPercentage)
   [control1, control2] = calculateIntermediatePoints(intermediate1, intermediate2, outer, controlPercentage)
 
-  return [
-    inner.map(pointAsString)
-    intermediate1.map(pointAsString)
-    intermediate2.map(pointAsString)
-    control1.map(pointAsString)
-    control2.map(pointAsString)
-  ]
+  return [inner, intermediate1, intermediate2, control1, control2]
 
 crossingCubicPoints = (controlAngle, controlDistance) ->
   outer = outerPoints()
@@ -305,7 +280,7 @@ crossingCubicPoints = (controlAngle, controlDistance) ->
   controlPoints1 = _.zip(outer, displacement1).map(addPoints)
   controlPoints2 = _.zip(outer, displacement2).map(addPoints)
 
-  [outer.map(pointAsString), controlPoints1.map(pointAsString), controlPoints2.map(pointAsString)]
+  [outer, controlPoints1, controlPoints2]
 
 
 linearStarPath = (innerRadius) ->
