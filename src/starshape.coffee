@@ -101,10 +101,7 @@ setShapeToCrossingCubic = () ->
 
 
 refreshStarPath = () ->
-  if controls["straight-percentage"].val() == "100"
-    drawLinearStar()
-  else
-    drawStarFunction()
+  drawStarFunction()
 
 
 updateUrlQuery = (key, value) ->
@@ -342,6 +339,9 @@ cubicStarPath = (innerRadius, controlPercentage) ->
   return "M #{ first } " + sectionStrings.join(" ") + " Z"
 
 starWithCircularTipsPath = (innerRadius, straightPercentage) ->
+  if straightPercentage == "100"
+    return linearStarPath(innerRadius)
+
   [inner, intermediate1, intermediate2, radius] = starWithCircularTipsPoints(innerRadius, straightPercentage)
   points = _.zip(inner, intermediate1, intermediate2)
 
@@ -352,6 +352,8 @@ starWithCircularTipsPath = (innerRadius, straightPercentage) ->
 starWithQuadraticTipsPath = (innerRadius, straightPercentage) ->
   if straightPercentage == "0"
     return quadraticStarPath(innerRadius)
+  if straightPercentage == "100"
+    return linearStarPath(innerRadius)
 
   [outer, inner, intermediate1, intermediate2] = starWithQuadraticTipsPoints(innerRadius, straightPercentage)
   points = _.zip(inner, intermediate1, outer, intermediate2)
@@ -363,6 +365,8 @@ starWithQuadraticTipsPath = (innerRadius, straightPercentage) ->
 starWithCubicTipsPath = (innerRadius, straightPercentage, controlPercentage) ->
   if straightPercentage == "0"
     return cubicStarPath(innerRadius, controlPercentage)
+  if straightPercentage == "100"
+    return linearStarPath(innerRadius)
 
   [inner, intermediate1, intermediate2, control1, control2] = starWithCubicTipsPoints(innerRadius, straightPercentage, controlPercentage)
   points = _.zip(inner, intermediate1, control1, control2, intermediate2)
@@ -384,11 +388,6 @@ crossingCubicStarPath = (controlAngle, controlDistance) ->
 setStarPath = (path) ->
   $("#star").attr("d", path)
   return
-
-drawLinearStar = () ->
-  innerRadius = controls["inner-radius"].val()
-  path = linearStarPath(innerRadius)
-  setStarPath(path)
 
 drawStarWithCircularTips = () ->
   innerRadius = controls["inner-radius"].val()
