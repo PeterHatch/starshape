@@ -203,23 +203,15 @@ calculateRadius = (a, b, c) ->
   length_am * (1 / Math.cos(angle_cax))
 
 
-calculateInnerPoints = () ->
-  innerRadius = controls["inner-radius"].val()
+innerPoints = (radius) ->
   innerAngles = [-7*Math.PI/10, -3*Math.PI/10,   Math.PI/10, 5*Math.PI/10,  9*Math.PI/10]
-
-  innerAngles.map (angle) -> polarToCartesian(angle, innerRadius)
-
-innerPointStrings = () ->
-  calculateInnerPoints().map pointAsString
+  innerAngles.map (angle) -> polarToCartesian(angle, radius)
 
 outerAngles = () ->
   [-5*Math.PI/10,   -Math.PI/10, 3*Math.PI/10, 7*Math.PI/10, -9*Math.PI/10]
 
-calculateOuterPoints = (radius = 1) ->
+outerPoints = (radius = 1) ->
   outerAngles().map (angle) -> polarToCartesian(angle, radius)
-
-outerPointStrings = (radius = 1) ->
-  calculateOuterPoints(radius).map pointAsString
 
 # This functions calculates the points in between each set of inner and outer points.
 # If there are five points in each, there will be five in the output.
@@ -243,22 +235,66 @@ calculateIntermediatePointsComingAndGoing = (innerPoints, outerPoints, percentag
   calculateIntermediatePoints(innerPoints, shiftedInnerPoints, outerPoints, percentage)
 
 
-calculateLineToCurveTransitionPoints = (innerPoints, outerPoints) ->
-  percentage = controls["straight-percentage"].val()
-  calculateIntermediatePointsComingAndGoing(innerPoints, outerPoints, percentage)
+innerStarPoints = (innerRadius) ->
+  outer = outerPoints()
+  inner = innerPoints(innerRadius)
 
-calculateControlPoints = (innerPoints, outerPoints) ->
-  percentage = controls["control-percentage"].val()
-  calculateIntermediatePointsComingAndGoing(innerPoints, outerPoints, percentage)
+  return [
+    outer.map(pointAsString)
+    inner.map(pointAsString)
+  ]
 
-calculateControlPointsFromIntermediate = (intermediatePoints1, intermediatePoints2, outerPoints) ->
-  percentage = controls["control-percentage"].val()
-  calculateIntermediatePoints(intermediatePoints1, intermediatePoints2, outerPoints, percentage)
+linearStarPoints = innerStarPoints
+quadraticStarPoints = innerStarPoints
 
-crossingCubicPoints = () ->
-  outerPoints = calculateOuterPoints()
-  controlAngle = controls["control-angle"].val()
-  controlDistance = controls["control-distance"].val()
+innerAndIntermediatePoints = (innerRadius, percentage) ->
+  outer = outerPoints()
+  inner = innerPoints(innerRadius)
+  [intermediate1, intermediate2] = calculateIntermediatePointsComingAndGoing(inner, outer, percentage)
+
+  return [
+    outer.map(pointAsString)
+    inner.map(pointAsString)
+    intermediate1.map(pointAsString)
+    intermediate2.map(pointAsString)
+  ]
+
+starWithQuadraticTipsPoints = innerAndIntermediatePoints
+
+cubicStarPoints = (innerRadius, controlPercentage) ->
+  [outer, inner, control1, control2] = innerAndIntermediatePoints(innerRadius, controlPercentage)
+  return [inner, control1, control2]
+
+starWithCircularTipsPoints = (innerRadius, straightPercentage) ->
+  outer = outerPoints()
+  inner = innerPoints(innerRadius)
+  [intermediate1, intermediate2] = calculateIntermediatePointsComingAndGoing(inner, outer, straightPercentage)
+
+  radius = calculateRadius(intermediate1[0], outer[0], intermediate2[0])
+
+  return [
+    inner.map(pointAsString)
+    intermediate1.map(pointAsString)
+    intermediate2.map(pointAsString)
+    radius
+  ]
+
+starWithCubicTipsPoints = (innerRadius, straightPercentage, controlPercentage) ->
+  outer = outerPoints()
+  inner = innerPoints(innerRadius)
+  [intermediate1, intermediate2] = calculateIntermediatePointsComingAndGoing(inner, outer, straightPercentage)
+  [control1, control2] = calculateIntermediatePoints(intermediate1, intermediate2, outer, controlPercentage)
+
+  return [
+    inner.map(pointAsString)
+    intermediate1.map(pointAsString)
+    intermediate2.map(pointAsString)
+    control1.map(pointAsString)
+    control2.map(pointAsString)
+  ]
+
+crossingCubicPoints = (controlAngle, controlDistance) ->
+  outer = outerPoints()
 
   controlAngle = (controlAngle / 2) * (Math.PI / 180)
   angles = outerAngles()
@@ -269,107 +305,112 @@ crossingCubicPoints = () ->
 
   displacement1 = controlAngles1.map (angle) -> polarToCartesian(angle, controlDistance)
   displacement2 = controlAngles2.map (angle) -> polarToCartesian(angle, controlDistance)
-  controlPoints1 = _.zip(outerPoints, displacement1).map(addPoints)
-  controlPoints2 = _.zip(outerPoints, displacement2).map(addPoints)
+  controlPoints1 = _.zip(outer, displacement1).map(addPoints)
+  controlPoints2 = _.zip(outer, displacement2).map(addPoints)
 
-  [outerPoints.map(pointAsString), controlPoints1.map(pointAsString), controlPoints2.map(pointAsString)]
+  [outer.map(pointAsString), controlPoints1.map(pointAsString), controlPoints2.map(pointAsString)]
 
 
-drawLinearStar = () ->
-  innerPoints = innerPointStrings()
-  outerPoints = outerPointStrings()
-  points = _.flatten _.zip(innerPoints, outerPoints)
+linearStarPath = (innerRadius) ->
+  [outer, inner] = linearStarPoints(innerRadius)
 
-  pathString = "M " + points.shift() + " L "
-  pathString += points.join(" ")
-  pathString += " Z"
+  points = _.flatten(_.zip(inner, outer))
+  return "M " + points.join(" L ") + " Z"
 
-  $("#star").attr("d", pathString)
+quadraticStarPath = (innerRadius) ->
+  [outer, inner] = quadraticStarPoints(innerRadius)
 
-drawQuadraticStar = () ->
-  innerPoints = innerPointStrings()
-  outerPoints = outerPointStrings()
+  first = inner[0]
+  inner.push(inner.shift())
+  points = _.zip(outer, inner)
 
-  firstPoint = innerPoints[0]
-  innerPoints.push(innerPoints.shift())
-  points = _.zip(outerPoints, innerPoints)
+  sectionStrings = points.map ([outer, inner]) ->
+    "Q #{ outer } #{ inner }"
 
-  sectionStrings = points.map ([outerPoint, innerPoint]) ->
-    " Q " + outerPoint + " " + innerPoint
+  return "M #{ first } " + sectionStrings.join(" ") + " Z"
 
-  pathString = "M " + firstPoint + sectionStrings.join('') + " Z"
-  $("#star").attr("d", pathString)
+cubicStarPath = (innerRadius, controlPercentage) ->
+  [inner, control1, control2] = cubicStarPoints(innerRadius, controlPercentage)
 
-drawCubicStar = () ->
-  innerPoints = calculateInnerPoints()
-  outerPoints = calculateOuterPoints()
-  [controlPoints1, controlPoints2] = calculateControlPoints(innerPoints, outerPoints)
-
-  firstPoint = pointAsString(innerPoints[0])
-  innerPoints.push(innerPoints.shift())
-  points = _.zip(controlPoints1.map(pointAsString), controlPoints2.map(pointAsString), innerPoints.map(pointAsString))
+  first = inner[0]
+  inner.push(inner.shift())
+  points = _.zip(control1, control2, inner)
 
   sectionStrings = points.map ([control1, control2, inner]) ->
     "C #{ control1 } #{ control2 } #{ inner }"
 
-  pathString = "M #{ firstPoint } " + sectionStrings.join(" ") + " Z"
-  $("#star").attr("d", pathString)
+  return "M #{ first } " + sectionStrings.join(" ") + " Z"
 
-
-drawStarWithCircularTips = () ->
-  innerPoints = calculateInnerPoints()
-  outerPoints = calculateOuterPoints()
-  [intermediatePoints1, intermediatePoints2] = calculateLineToCurveTransitionPoints(innerPoints, outerPoints)
-
-  radius = calculateRadius(intermediatePoints1[0], outerPoints[0], intermediatePoints2[0])
-
-  points = _.zip(innerPoints.map(pointAsString), intermediatePoints1.map(pointAsString), intermediatePoints2.map(pointAsString))
+starWithCircularTipsPath = (innerRadius, straightPercentage) ->
+  [inner, intermediate1, intermediate2, radius] = starWithCircularTipsPoints(innerRadius, straightPercentage)
+  points = _.zip(inner, intermediate1, intermediate2)
 
   sectionStrings = points.map ([inner, intermediate1, intermediate2]) ->
     "#{ inner } L #{ intermediate1 } A #{ radius } #{ radius } 0 0 1 #{ intermediate2 }"
-  pathString = "M " + sectionStrings.join(" L ") + " Z"
-  $("#star").attr("d", pathString)
+  return "M " + sectionStrings.join(" L ") + " Z"
 
-drawStarWithQuadraticTips = () ->
-  if controls["straight-percentage"].val() == "0"
-    drawQuadraticStar()
-    return
+starWithQuadraticTipsPath = (innerRadius, straightPercentage) ->
+  if straightPercentage == "0"
+    return quadraticStarPath(innerRadius)
 
-  innerPoints = calculateInnerPoints()
-  outerPoints = calculateOuterPoints()
-  [intermediatePoints1, intermediatePoints2] = calculateLineToCurveTransitionPoints(innerPoints, outerPoints)
-
-  points = _.zip(innerPoints.map(pointAsString), intermediatePoints1.map(pointAsString), outerPoints.map(pointAsString), intermediatePoints2.map(pointAsString))
+  [outer, inner, intermediate1, intermediate2] = starWithQuadraticTipsPoints(innerRadius, straightPercentage)
+  points = _.zip(inner, intermediate1, outer, intermediate2)
 
   sectionStrings = points.map ([inner, intermediate1, outer, intermediate2]) ->
     "#{ inner } L #{ intermediate1 } Q #{ outer } #{ intermediate2 }"
-  pathString = "M " + sectionStrings.join(" L ") + " Z"
-  $("#star").attr("d", pathString)
+  return "M " + sectionStrings.join(" L ") + " Z"
 
-drawStarWithCubicTips = () ->
-  if controls["straight-percentage"].val() == "0"
-    drawCubicStar()
-    return
+starWithCubicTipsPath = (innerRadius, straightPercentage, controlPercentage) ->
+  if straightPercentage == "0"
+    return cubicStarPath(innerRadius, controlPercentage)
 
-  innerPoints = calculateInnerPoints()
-  outerPoints = calculateOuterPoints()
-  [intermediatePoints1, intermediatePoints2] = calculateLineToCurveTransitionPoints(innerPoints, outerPoints)
-  [controlPoints1, controlPoints2] = calculateControlPointsFromIntermediate(intermediatePoints1, intermediatePoints2, outerPoints)
-
-  points = _.zip(innerPoints.map(pointAsString), intermediatePoints1.map(pointAsString), controlPoints1.map(pointAsString), controlPoints2.map(pointAsString), intermediatePoints2.map(pointAsString))
+  [inner, intermediate1, intermediate2, control1, control2] = starWithCubicTipsPoints(innerRadius, straightPercentage, controlPercentage)
+  points = _.zip(inner, intermediate1, control1, control2, intermediate2)
 
   sectionStrings = points.map ([inner, intermediate1, control1, control2, intermediate2]) ->
     "#{ inner } L #{ intermediate1 } C #{ control1 } #{ control2 } #{ intermediate2 }"
-  pathString = "M " + sectionStrings.join(" L ") + " Z"
-  $("#star").attr("d", pathString)
+  return "M " + sectionStrings.join(" L ") + " Z"
 
+crossingCubicStarPath = (controlAngle, controlDistance) ->
+  [outer, control1, control2] = crossingCubicPoints(controlAngle, controlDistance)
+  "M #{outer[0]} C #{control1[0]} #{control2[2]} #{outer[2]}
+                 C #{control1[2]} #{control2[4]} #{outer[4]}
+                 C #{control1[4]} #{control2[1]} #{outer[1]}
+                 C #{control1[1]} #{control2[3]} #{outer[3]}
+                 C #{control1[3]} #{control2[0]} #{outer[0]}
+                 Z"
+
+
+setStarPath = (path) ->
+  $("#star").attr("d", path)
+  return
+
+drawLinearStar = () ->
+  innerRadius = controls["inner-radius"].val()
+  path = linearStarPath(innerRadius)
+  setStarPath(path)
+
+drawStarWithCircularTips = () ->
+  innerRadius = controls["inner-radius"].val()
+  straightPercentage = controls["straight-percentage"].val()
+  path = starWithCircularTipsPath(innerRadius, straightPercentage)
+  setStarPath(path)
+
+drawStarWithQuadraticTips = () ->
+  innerRadius = controls["inner-radius"].val()
+  straightPercentage = controls["straight-percentage"].val()
+  path = starWithQuadraticTipsPath(innerRadius, straightPercentage)
+  setStarPath(path)
+
+drawStarWithCubicTips = () ->
+  innerRadius = controls["inner-radius"].val()
+  straightPercentage = controls["straight-percentage"].val()
+  controlPercentage = controls["control-percentage"].val()
+  path = starWithCubicTipsPath(innerRadius, straightPercentage, controlPercentage)
+  setStarPath(path)
 
 drawCrossingCubicStar = () ->
-  [outer, control1, control2] = crossingCubicPoints()
-  pathString = "M #{outer[0]} C #{control1[0]} #{control2[2]} #{outer[2]}
-                              C #{control1[2]} #{control2[4]} #{outer[4]}
-                              C #{control1[4]} #{control2[1]} #{outer[1]}
-                              C #{control1[1]} #{control2[3]} #{outer[3]}
-                              C #{control1[3]} #{control2[0]} #{outer[0]}
-                              Z"
-  $("#star").attr("d", pathString)
+  controlAngle = controls["control-angle"].val()
+  controlDistance = controls["control-distance"].val()
+  path = crossingCubicStarPath(controlAngle, controlDistance)
+  setStarPath(path)
