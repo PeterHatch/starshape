@@ -1,10 +1,69 @@
-$innerRadius = null
-$straightPercentage = null
-$controlPercentage = null
-$controlAngle = null
-$controlDistance = null
 drawStarFunction = null
 uri = null
+
+controls = {}
+
+class Slider
+  constructor: (name, uriKey, defaultValue, initialValue) ->
+    controls[name] = this
+    @_element = $("#" + name)
+    @_section = $("#" + name + "-section")
+    @_isVisible = true
+    @_uriKey = uriKey
+
+    @_element.rangeslider {
+      polyfill: false
+      onSlide: @_onSlide
+      onSlideEnd: @_onSlideEnd
+    }
+
+    value = if initialValue is undefined then defaultValue else initialValue
+    @_element.val(value)
+    @_updateText(value)
+
+  val: () -> @_element.val()
+
+  show: () ->
+    if @_isVisible
+      return this
+
+    @_section.css("visibility", "visible")
+    @_isVisible = true
+    return this
+
+  hide: () ->
+    unless @_isVisible
+      return this
+
+    @_section.css("visibility", "collapse")
+    @_isVisible = false
+    return this
+
+  _format: (value) -> value
+
+  _updateText: (value) ->
+    $(".rangeslider__handle", @_section).text(@_format(value))
+
+  _onSlide: (_, value) =>
+    @_updateText(value)
+    refreshStarPath()
+
+  _onSlideEnd: (_, value) =>
+    updateUrlQuery(@_uriKey, value)
+
+
+class PercentSlider extends Slider
+  _format: (value) -> value + "%"
+
+
+showControls = (visibleControls...) ->
+  for controlName, control of controls
+    if controlName in visibleControls
+      control.show()
+    else
+      control.hide()
+  return
+
 
 refreshForeground = (color) ->
   $("#swatch").css("color", color.toHexString())
@@ -18,55 +77,34 @@ refreshBackground = (color) ->
 
 setShapeToCircular = () ->
   drawStarFunction = drawStarWithCircularTips
-  $("#inner-radius-section").css("visibility", "visible")
-  $("#straight-percentage-section").css("visibility", "visible")
-  $("#control-point-section").css("visibility", "collapse")
-  $("#control-point-angle-section").css("visibility", "collapse")
-  $("#control-point-distance-section").css("visibility", "collapse")
+  showControls("inner-radius", "straight-percentage")
   updateUrlQuery("s", "circular")
   refreshStarPath()
 
 setShapeToQuadratic = () ->
   drawStarFunction = drawStarWithQuadraticTips
-  $("#inner-radius-section").css("visibility", "visible")
-  $("#straight-percentage-section").css("visibility", "visible")
-  $("#control-point-section").css("visibility", "collapse")
-  $("#control-point-angle-section").css("visibility", "collapse")
-  $("#control-point-distance-section").css("visibility", "collapse")
+  showControls("inner-radius", "straight-percentage")
   updateUrlQuery("s", "quadratic")
   refreshStarPath()
 
 setShapeToCubic = () ->
   drawStarFunction = drawStarWithCubicTips
-  $("#inner-radius-section").css("visibility", "visible")
-  $("#straight-percentage-section").css("visibility", "visible")
-  $("#control-point-section").css("visibility", "visible")
-  $("#control-point-angle-section").css("visibility", "collapse")
-  $("#control-point-distance-section").css("visibility", "collapse")
+  showControls("inner-radius", "straight-percentage", "control-percentage")
   updateUrlQuery("s", "cubic")
   refreshStarPath()
 
 setShapeToCrossingCubic = () ->
   drawStarFunction = drawCrossingCubicStar
-  $("#inner-radius-section").css("visibility", "collapse")
-  $("#straight-percentage-section").css("visibility", "collapse")
-  $("#control-point-section").css("visibility", "collapse")
-  $("#control-point-angle-section").css("visibility", "visible")
-  $("#control-point-distance-section").css("visibility", "visible")
+  showControls("control-angle", "control-distance")
   updateUrlQuery("s", "crossingcubic")
   refreshStarPath()
 
 
 refreshStarPath = () ->
-  if $straightPercentage.val() == "100"
+  if controls["straight-percentage"].val() == "100"
     drawLinearStar()
   else
     drawStarFunction()
-
-
-updateSlider = (sliderElement, value) ->
-  $(".rangeslider__handle", sliderElement.$range).text(value)
-  refreshStarPath()
 
 
 updateUrlQuery = (key, value) ->
@@ -81,11 +119,6 @@ initializeOptions = () ->
   options = uri.search(true)
 
   options.s ?= "crossingcubic"
-  options.r ?= 1 - (2 / (1 + Math.sqrt(5)))
-  options.l ?= 75
-  options.c ?= 100
-  options.ca ?= 180
-  options.cd ?= 0.14
   options.fg ?= "fddc34"
   if options.bg == undefined    # null is a valid value for bg, so don't replace it with the default
     options.bg = "000000"
@@ -93,14 +126,15 @@ initializeOptions = () ->
   options
 
 
+
 $(document).ready () ->
   options = initializeOptions()
 
-  $innerRadius = $("#inner-radius")
-  $straightPercentage = $("#straight-percentage")
-  $controlPercentage = $("#control-percentage")
-  $controlAngle = $("#control-angle")
-  $controlDistance = $("#control-distance")
+  new Slider("inner-radius", "r", 1 - (2 / (1 + Math.sqrt(5))), options.r)
+  new PercentSlider("straight-percentage", "l", 75, options.l)
+  new PercentSlider("control-percentage", "c", 100, options.c)
+  new Slider("control-angle", "ca", 180, options.ca)
+  new Slider("control-distance", "cd", 0.15, options.cd)
 
   $("#circular").change(setShapeToCircular)
   $("#quadratic").change(setShapeToQuadratic)
@@ -128,41 +162,6 @@ $(document).ready () ->
 
   refreshForeground($("#fg-color-picker").spectrum("get"))
   refreshBackground($("#bg-color-picker").spectrum("get"))
-
-  $innerRadius.rangeslider {
-    polyfill: false
-    onSlide: (_, value) -> updateSlider(this, value)
-    onSlideEnd: (_, value) -> updateUrlQuery("r", value)
-  }
-  $innerRadius.val(options.r).change()
-
-  $straightPercentage.rangeslider {
-    polyfill: false
-    onSlide: (_, value) -> updateSlider(this, value + "%")
-    onSlideEnd: (_, value) -> updateUrlQuery("l", value)
-  }
-  $straightPercentage.val(options.l).change()
-
-  $controlPercentage.rangeslider {
-    polyfill: false
-    onSlide: (_, value) -> updateSlider(this, value + "%")
-    onSlideEnd: (_, value) -> updateUrlQuery("c", value)
-  }
-  $controlPercentage.val(options.c).change()
-
-  $controlAngle.rangeslider {
-    polyfill: false
-    onSlide: (_, value) -> updateSlider(this, value)
-    onSlideEnd: (_, value) -> updateUrlQuery("ca", value)
-  }
-  $controlAngle.val(options.ca).change()
-
-  $controlDistance.rangeslider {
-    polyfill: false
-    onSlide: (_, value) -> updateSlider(this, value)
-    onSlideEnd: (_, value) -> updateUrlQuery("cd", value)
-  }
-  $controlDistance.val(options.cd).change()
 
 
 ## Math functions for calculating star shapes
@@ -205,7 +204,7 @@ calculateRadius = (a, b, c) ->
 
 
 calculateInnerPoints = () ->
-  innerRadius = $innerRadius.val()
+  innerRadius = controls["inner-radius"].val()
   innerAngles = [-7*Math.PI/10, -3*Math.PI/10,   Math.PI/10, 5*Math.PI/10,  9*Math.PI/10]
 
   innerAngles.map (angle) -> polarToCartesian(angle, innerRadius)
@@ -245,21 +244,21 @@ calculateIntermediatePointsComingAndGoing = (innerPoints, outerPoints, percentag
 
 
 calculateLineToCurveTransitionPoints = (innerPoints, outerPoints) ->
-  percentage = $straightPercentage.val()
+  percentage = controls["straight-percentage"].val()
   calculateIntermediatePointsComingAndGoing(innerPoints, outerPoints, percentage)
 
 calculateControlPoints = (innerPoints, outerPoints) ->
-  percentage = $controlPercentage.val()
+  percentage = controls["control-percentage"].val()
   calculateIntermediatePointsComingAndGoing(innerPoints, outerPoints, percentage)
 
 calculateControlPointsFromIntermediate = (intermediatePoints1, intermediatePoints2, outerPoints) ->
-  percentage = $controlPercentage.val()
+  percentage = controls["control-percentage"].val()
   calculateIntermediatePoints(intermediatePoints1, intermediatePoints2, outerPoints, percentage)
 
 crossingCubicPoints = () ->
   outerPoints = calculateOuterPoints()
-  controlAngle = $controlAngle.val()
-  controlDistance = $controlDistance.val()
+  controlAngle = controls["control-angle"].val()
+  controlDistance = controls["control-distance"].val()
 
   controlAngle = (controlAngle / 2) * (Math.PI / 180)
   angles = outerAngles()
@@ -332,7 +331,7 @@ drawStarWithCircularTips = () ->
   $("#star").attr("d", pathString)
 
 drawStarWithQuadraticTips = () ->
-  if $straightPercentage.val() == "0"
+  if controls["straight-percentage"].val() == "0"
     drawQuadraticStar()
     return
 
@@ -348,7 +347,7 @@ drawStarWithQuadraticTips = () ->
   $("#star").attr("d", pathString)
 
 drawStarWithCubicTips = () ->
-  if $straightPercentage.val() == "0"
+  if controls["straight-percentage"].val() == "0"
     drawCubicStar()
     return
 
