@@ -1,7 +1,7 @@
-task :html => Rake::FileList["src/*.slim"].pathmap("%{^src/,compiled/}X.html")
+task :html => Rake::FileList["src/*.pug"].pathmap("%{^src/,compiled/}X.html")
 
-rule ".html" => [->(file) { file.pathmap("%{^compiled/,src/}X.slim") }, "compiled"] do |t|
-  sh "slimrb --pretty #{t.source} > #{t.name}"
+rule ".html" => [->(file) { file.pathmap("%{^compiled/,src/}X.pug") }, "compiled"] do |t|
+  sh "pug --out compiled #{t.source}"
 end
 
 

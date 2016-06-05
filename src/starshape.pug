@@ -1,0 +1,65 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    title Starshape
+
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/URI.js/1.18.0/URI.min.js")
+
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js")
+
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.1.1/rangeslider.min.css")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.1.1/rangeslider.min.js")
+
+    link(rel="stylesheet" href="starshape.css")
+    script(src="starshape.js")
+
+  body
+    svg(id="swatch" viewBox="-1.1 -1.1 2.2 2.2")
+      path(id="star" d="M 1,0 L 0,1 -1,0 0,-1 Z" fill="currentColor")
+
+    .controls
+      h2 Colors
+      label
+        input(id="fg-color-picker" class="color-picker" type="text")
+        |  Star
+      label
+        input(id="bg-color-picker" class="color-picker" type="text")
+        |  Background
+
+      h2 Shape
+      label
+        input(id="crossingcubic" type="radio" name="shape" checked="checked")
+        | Crossing Cubic Bezier Curves
+      label
+        input(id="cubic"         type="radio" name="shape")
+        | Cubic Bezier Curves
+      label
+        input(id="quadratic"     type="radio" name="shape")
+        | Quadratic Bezier Curves
+      label
+        input(id="circular"      type="radio" name="shape")
+        | Circular Arcs
+
+      div(id="inner-radius-section")
+        h4 Inner Radius
+        input(id="inner-radius" type="range" min="0.25" max="0.75" step="0.01" value="0.5")
+
+      div(id="straight-percentage-section")
+        h4 Straight Line Percentage
+        input(id="straight-percentage" type="range" min="0" max="100" value="75")
+
+      div(id="control-percentage-section")
+        h4 Control Point Length Percentage
+        input(id="control-percentage" type="range" min="1" max="200" value="100")
+
+      div(id="control-angle-section")
+        h4 Control Point Angle
+        input(id="control-angle" type="range" min="0" max="180" value="180")
+
+      div(id="control-distance-section")
+        h4 Control Point Distance
+        input(id="control-distance" type="range" min="0.01" max="1.0" step="0.01" value="0.25")
