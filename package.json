@@ -1,0 +1,40 @@
+{
+  "name": "starshape",
+  "version": "0.1.0",
+  "description": "Simple toy for playing with different star shapes.",
+  "author": "Peter Hatch",
+  "license": "AGPL-3.0",
+  "private": true,
+  "main": "compiled/starshape.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PeterHatch/starshape.git"
+  },
+  "bugs": {
+    "url": "https://github.com/PeterHatch/starshape/issues"
+  },
+  "homepage": "https://github.com/PeterHatch/starshape#readme",
+  "devDependencies": {
+    "coffee-script": "^1.10.0",
+    "node-sass": "^3.7.0",
+    "parallelshell": "^2.0.0",
+    "pug-cli": "^1.0.0-alpha6",
+    "rimraf": "^2.5.2"
+  },
+  "scripts": {
+    "clean": "rimraf ./compiled/*",
+    "prebuild": "npm run clean -s",
+
+    "build:scripts": "coffee --compile --map --output compiled src/starshape.coffee",
+    "watch:scripts": "coffee --compile --map --output compiled --watch src/starshape.coffee ",
+    "build:styles": "node-sass --source-map true --output compiled src/starshape.sass",
+    "watch:styles": "node-sass --source-map true --output compiled --watch src/starshape.sass",
+    "build:markup": "pug --out compiled src/starshape.pug",
+    "watch:markup": "pug --out compiled --watch src/starshape.pug",
+
+    "build": "npm run build:scripts -s && npm run build:styles -s && npm run build:markup -s",
+    "watch": "parallelshell \"npm run watch:scripts -s\" \"npm run watch:styles -s\" \"npm run watch:markup -s\"",
+
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
