@@ -19,7 +19,6 @@ module.exports = {
     'no-unused-vars': [2, { vars: 'all', varsIgnorePattern: '^_', args: 'all', argsIgnorePattern: '^_' }], // Would prefer to only ignore vars starting with _ if used in destructuring
 
     // Temporary rules, to be removed in the future, but suppressing errors that are non-trivial to fix for now
-    'no-param-reassign': 0, // TEMP
     'no-shadow': 0, // TEMP
     'no-use-before-define': 0, // TEMP
   },

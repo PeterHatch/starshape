@@ -5,7 +5,7 @@ let uri = null
 
 function updateUrlQuery(key, value) {
   uri.search((queryParams) => {
-    queryParams[key] = value
+    queryParams[key] = value  // eslint-disable-line no-param-reassign
   })
   history.replaceState(null, '', uri.resource())
 }
@@ -435,10 +435,10 @@ class CrossingCubicStar extends Star {
   points(controlAngle, controlDistance) {
     const outer = outerPoints()
 
-    controlAngle = (controlAngle / 2) * (Math.PI / 180)
+    const halfAngle = (controlAngle / 2) * (Math.PI / 180)
     const angles = outerAngles()
-    const controlAngles1 = angles.map((angle) => angle + Math.PI - controlAngle)
-    const controlAngles2 = angles.map((angle) => angle + Math.PI + controlAngle)
+    const controlAngles1 = angles.map((angle) => angle + Math.PI - halfAngle)
+    const controlAngles2 = angles.map((angle) => angle + Math.PI + halfAngle)
 
     const displacement1 = controlAngles1.map((angle) => polarToCartesian(angle, controlDistance))
     const displacement2 = controlAngles2.map((angle) => polarToCartesian(angle, controlDistance))
