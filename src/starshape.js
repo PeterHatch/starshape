@@ -3,6 +3,14 @@
 let currentStar = null
 let uri = null
 
+function updateUrlQuery(key, value) {
+  uri.search((queryParams) => {
+    queryParams[key] = value
+  })
+  history.replaceState(null, '', uri.resource())
+}
+
+
 const controls = new Map()
 controls.add = function addControl(control) {
   this.set(control.name, control)
@@ -94,14 +102,6 @@ function refreshBackground(color) {
   } else {
     $('#swatch').css('background-color', '')
   }
-}
-
-
-function updateUrlQuery(key, value) {
-  uri.search((queryParams) => {
-    queryParams[key] = value
-  })
-  history.replaceState(null, '', uri.resource())
 }
 
 
