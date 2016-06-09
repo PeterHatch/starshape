@@ -22,6 +22,5 @@ module.exports = {
     'no-param-reassign': 0, // TEMP
     'no-shadow': 0, // TEMP
     'no-use-before-define': 0, // TEMP
-    'no-new': 0, // TEMP
   },
 }

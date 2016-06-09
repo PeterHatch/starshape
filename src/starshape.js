@@ -4,10 +4,13 @@ let currentStar = null
 let uri = null
 
 const controls = new Map()
+controls.add = function addControl(control) {
+  this.set(control.name, control)
+}
 
 class Slider {
   constructor(name, uriKey, defaultValue, initialValue) {
-    controls.set(name, this)
+    this.name = name
     this._element = $(`#${name}`)
     this._section = $(`#${name}-section`)
     this._isVisible = true
@@ -123,11 +126,11 @@ function initializeOptions() {
 $(document).ready(() => {
   const options = initializeOptions()
 
-  new Slider('inner-radius', 'r', 1 - (2 / (1 + Math.sqrt(5))), options.r)
-  new PercentSlider('straight-percentage', 'l', 75, options.l)
-  new PercentSlider('control-percentage', 'c', 100, options.c)
-  new Slider('control-angle', 'ca', 180, options.ca)
-  new Slider('control-distance', 'cd', 0.15, options.cd)
+  controls.add(new Slider('inner-radius', 'r', 1 - (2 / (1 + Math.sqrt(5))), options.r))
+  controls.add(new PercentSlider('straight-percentage', 'l', 75, options.l))
+  controls.add(new PercentSlider('control-percentage', 'c', 100, options.c))
+  controls.add(new Slider('control-angle', 'ca', 180, options.ca))
+  controls.add(new Slider('control-distance', 'cd', 0.15, options.cd))
 
   $('#circular').change(starWithCircularTips.use)
   $('#quadratic').change(starWithQuadraticTips.use)
