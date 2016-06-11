@@ -9,11 +9,18 @@ module.exports = {
     publicPath: 'compiled/',
   },
   module: {
+    preLoaders: [
+      {
+        test: /\.js$/,
+        loader: 'eslint',
+        exclude: /node_modules/,
+      }
+    ],
     loaders: [
       {
         test: /\.js$/,
         loader: 'babel',
-        include: __dirname + path.sep + 'src',
+        exclude: /node_modules/,
       },
     ],
   },

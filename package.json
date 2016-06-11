@@ -21,6 +21,7 @@
     "eslint": "^2.11.1",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-config-standard": "^5.3.1",
+    "eslint-loader": "^1.3.0",
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^1.3.0",
     "eslint-plugin-promise": "^1.3.2",
@@ -44,6 +45,7 @@
     "build:markup": "pug --out compiled src/starshape.pug",
     "watch:markup": "pug --out compiled --watch src/starshape.pug",
 
+    "lint": "eslint src",
     "build": "npm run build:scripts -s && npm run build:styles -s && npm run build:markup -s",
     "watch": "parallelshell \"npm run watch:scripts -s\" \"npm run watch:styles -s\" \"npm run watch:markup -s\"",
 
