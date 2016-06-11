@@ -44,17 +44,17 @@ export function calculateRadius(a, b, c) {
 }
 
 
-export function innerPoints(radius) {
+export function calculateInnerPoints(radius) {
   const innerAngles = [-7 * Math.PI / 10, -3 * Math.PI / 10, Math.PI / 10, 5 * Math.PI / 10, 9 * Math.PI / 10]
   return innerAngles.map((angle) => polarToCartesian(angle, radius))
 }
 
-export function outerAngles() {
+export function getOuterAngles() {
   return [-5 * Math.PI / 10, -Math.PI / 10, 3 * Math.PI / 10, 7 * Math.PI / 10, -9 * Math.PI / 10]
 }
 
-export function outerPoints(radius = 1) {
-  return outerAngles().map((angle) => polarToCartesian(angle, radius))
+export function calculateOuterPoints(radius = 1) {
+  return getOuterAngles().map((angle) => polarToCartesian(angle, radius))
 }
 
 // This functions calculates the points in between each set of inner and outer points.

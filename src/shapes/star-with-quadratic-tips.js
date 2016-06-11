@@ -21,8 +21,8 @@ class StarWithQuadraticTips extends InnerAndIntermediateStar {
     return super.path(innerRadius, straightPercentage)
   }
 
-  constructPath(inner, intermediate1, intermediate2, outer) {
-    const points = _.zip(inner, intermediate1, outer, intermediate2)
+  constructPath(innerPoints, intermediatePoints1, intermediatePoints2, outerPoints) {
+    const points = _.zip(innerPoints, intermediatePoints1, outerPoints, intermediatePoints2)
 
     const sectionStrings = points.map(([inner, intermediate1, outer, intermediate2]) =>
         `${inner} L ${intermediate1} Q ${outer} ${intermediate2}`)

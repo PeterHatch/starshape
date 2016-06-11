@@ -1,7 +1,7 @@
 /* globals _ */
 
 import Star from './base-star.js'
-import { outerPoints, outerAngles, polarToCartesian, addPoints } from './util/math.js'
+import { calculateOuterPoints, getOuterAngles, polarToCartesian, addPoints } from './util/math.js'
 
 class CrossingCubicStar extends Star {
   constructor() {
@@ -9,10 +9,10 @@ class CrossingCubicStar extends Star {
   }
 
   points(controlAngle, controlDistance) {
-    const outer = outerPoints()
+    const outer = calculateOuterPoints()
 
     const halfAngle = (controlAngle / 2) * (Math.PI / 180)
-    const angles = outerAngles()
+    const angles = getOuterAngles()
     const controlAngles1 = angles.map((angle) => angle + Math.PI - halfAngle)
     const controlAngles2 = angles.map((angle) => angle + Math.PI + halfAngle)
 

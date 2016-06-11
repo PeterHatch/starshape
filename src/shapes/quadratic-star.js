@@ -1,7 +1,7 @@
 /* globals _ */
 
 import Star from './base-star.js'
-import { innerPoints, outerPoints } from './util/math.js'
+import { calculateInnerPoints, calculateOuterPoints } from './util/math.js'
 
 class QuadraticStar extends Star {
   constructor() {
@@ -9,13 +9,13 @@ class QuadraticStar extends Star {
   }
 
   points(innerRadius) {
-    return [innerPoints(innerRadius), outerPoints()]
+    return [calculateInnerPoints(innerRadius), calculateOuterPoints()]
   }
 
-  constructPath(inner, outer) {
-    const first = inner[0]
-    inner.push(inner.shift())
-    const points = _.zip(outer, inner)
+  constructPath(innerPoints, outerPoints) {
+    const first = innerPoints[0]
+    innerPoints.push(innerPoints.shift())
+    const points = _.zip(outerPoints, innerPoints)
 
     const sectionStrings = points.map(([outer, inner]) =>
         `Q ${outer} ${inner}`)

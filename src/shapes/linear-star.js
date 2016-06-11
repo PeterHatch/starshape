@@ -1,7 +1,7 @@
 /* globals _ */
 
 import Star from './base-star.js'
-import { innerPoints, outerPoints } from './util/math.js'
+import { calculateInnerPoints, calculateOuterPoints } from './util/math.js'
 
 class LinearStar extends Star {
   constructor() {
@@ -9,11 +9,11 @@ class LinearStar extends Star {
   }
 
   points(innerRadius) {
-    return [innerPoints(innerRadius), outerPoints()]
+    return [calculateInnerPoints(innerRadius), calculateOuterPoints()]
   }
 
-  constructPath(inner, outer) {
-    const points = _.flatten(_.zip(inner, outer))
+  constructPath(innerPoints, outerPoints) {
+    const points = _.flatten(_.zip(innerPoints, outerPoints))
     return `M ${points.join(' L ')} Z`
   }
 }
