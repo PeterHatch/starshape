@@ -1,7 +1,7 @@
 /* globals _ */
 
 import Star from './base-star.js'
-import { innerPoints, outerPoints } from '../star.js'
+import { innerPoints, outerPoints } from './util/math.js'
 
 class QuadraticStar extends Star {
   constructor() {

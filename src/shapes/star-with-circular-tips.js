@@ -1,7 +1,7 @@
 /* globals _ */
 
 import InnerAndIntermediateStar from './base-inner-and-intermediate-star.js'
-import { calculateRadius } from '../star.js'
+import { calculateRadius } from './util/math.js'
 import linearStar from './linear-star.js'
 
 class StarWithCircularTips extends InnerAndIntermediateStar {

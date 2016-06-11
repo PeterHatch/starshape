@@ -1,7 +1,7 @@
 /* globals _ */
 
 import Star from './base-star.js'
-import { outerPoints, outerAngles, polarToCartesian, addPoints } from '../star.js'
+import { outerPoints, outerAngles, polarToCartesian, addPoints } from './util/math.js'
 
 class CrossingCubicStar extends Star {
   constructor() {

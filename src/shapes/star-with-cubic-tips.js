@@ -1,7 +1,7 @@
 /* globals _ */
 
 import Star from './base-star.js'
-import { outerPoints, innerPoints, calculateIntermediatePoints, calculateIntermediatePointsComingAndGoing } from '../star.js'
+import { outerPoints, innerPoints, calculateIntermediatePoints, calculateIntermediatePointsComingAndGoing } from './util/math.js'
 import linearStar from './linear-star.js'
 import cubicStar from './cubic-star.js'
 
