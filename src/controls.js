@@ -1,6 +1,6 @@
 /* globals $ */
 
-import { updateStarPath } from './starshape.js'
+import { updateStarPath } from './star.js'
 import { updateUrlQuery } from './uri.js'
 
 const controls = new Map()
