@@ -1,9 +1,11 @@
 /* globals $ _ */
 
-import { updateUrlQuery } from './uri.js'
-import { showControls, controlVals } from './controls.js'
+import starWithCircularTips from './shapes/star-with-circular-tips.js'
+import starWithQuadraticTips from './shapes/star-with-quadratic-tips.js'
+import starWithCubicTips from './shapes/star-with-cubic-tips.js'
+import crossingCubicStar from './shapes/crossing-cubic-star.js'
 
-let currentStar = null
+export { updateStarPath } from './shapes/base-star.js'
 
 
 // Utility math functions for calculating star shapes, used by Star.points functions
@@ -19,13 +21,13 @@ class Point {
   }
 }
 
-function polarToCartesian(angle, distance) {
+export function polarToCartesian(angle, distance) {
   const x = Math.cos(angle) * distance
   const y = Math.sin(angle) * distance
   return new Point(x, y)
 }
 
-function addPoints([point1, point2]) {
+export function addPoints([point1, point2]) {
   return new Point(point1.x + point2.x, point1.y + point2.y)
 }
 
@@ -43,7 +45,7 @@ function calculateAngle(point1, point2) {
 // This currently relies on the line AC being horizontal (to simplify calculation of angle CAB).
 //
 // M is the midpoint of AC, and X is the center of the circle with radius R we are solving for.
-function calculateRadius(a, b, c) {
+export function calculateRadius(a, b, c) {
   const angleCAB = calculateAngle(a, b)
   const angleCAX = angleCAB + (Math.PI / 2)
   const lengthAM = calculateDistance(a, c) / 2
@@ -52,16 +54,16 @@ function calculateRadius(a, b, c) {
 }
 
 
-function innerPoints(radius) {
+export function innerPoints(radius) {
   const innerAngles = [-7 * Math.PI / 10, -3 * Math.PI / 10, Math.PI / 10, 5 * Math.PI / 10, 9 * Math.PI / 10]
   return innerAngles.map((angle) => polarToCartesian(angle, radius))
 }
 
-function outerAngles() {
+export function outerAngles() {
   return [-5 * Math.PI / 10, -Math.PI / 10, 3 * Math.PI / 10, 7 * Math.PI / 10, -9 * Math.PI / 10]
 }
 
-function outerPoints(radius = 1) {
+export function outerPoints(radius = 1) {
   return outerAngles().map((angle) => polarToCartesian(angle, radius))
 }
 
@@ -76,237 +78,19 @@ function calculateSimpleIntermediatePoints(innerPoints, outerPoints, percentage)
   return _.zip(innerPoints, displacementVectors).map(addPoints)
 }
 
-function calculateIntermediatePoints(innerPoints1, innerPoints2, outerPoints, percentage) {
+export function calculateIntermediatePoints(innerPoints1, innerPoints2, outerPoints, percentage) {
   const points1 = calculateSimpleIntermediatePoints(innerPoints1, outerPoints, percentage)
   const points2 = calculateSimpleIntermediatePoints(innerPoints2, outerPoints, percentage)
 
   return [points1, points2]
 }
 
-function calculateIntermediatePointsComingAndGoing(innerPoints, outerPoints, percentage) {
+export function calculateIntermediatePointsComingAndGoing(innerPoints, outerPoints, percentage) {
   const shiftedInnerPoints = innerPoints.slice(1)
   shiftedInnerPoints.push(innerPoints[0])
   return calculateIntermediatePoints(innerPoints, shiftedInnerPoints, outerPoints, percentage)
 }
 
-
-class Star {
-  constructor(name, controls) {
-    this.name = name
-    this.controls = controls
-    this.use = () => {
-      currentStar = this
-      showControls(...this.controls)
-      updateUrlQuery('s', this.name)
-      this.refreshPath()
-    }
-  }
-
-  refreshPath() {
-    const pathString = this.path(...controlVals(...this.controls))
-    $('#star').attr('d', pathString)
-  }
-
-  path(...inputs) {
-    const points = this.points(...inputs)
-    return this.constructPath(...points)
-  }
-}
-
-class InnerAndIntermediateStar extends Star {
-  points(innerRadius, percentage) {
-    const outer = outerPoints()
-    const inner = innerPoints(innerRadius)
-    const [intermediate1, intermediate2] = calculateIntermediatePointsComingAndGoing(inner, outer, percentage)
-
-    return [inner, intermediate1, intermediate2, outer]
-  }
-}
-
-class LinearStar extends Star {
-  constructor() {
-    super('linear', ['inner-radius'])
-  }
-
-  points(innerRadius) {
-    return [innerPoints(innerRadius), outerPoints()]
-  }
-
-  constructPath(inner, outer) {
-    const points = _.flatten(_.zip(inner, outer))
-    return `M ${points.join(' L ')} Z`
-  }
-}
-
-class StarWithCircularTips extends InnerAndIntermediateStar {
-  constructor() {
-    super('circular', ['inner-radius', 'straight-percentage'])
-  }
-
-  path(innerRadius, straightPercentage) {
-    if (straightPercentage === '100') {
-      return linearStar.path(innerRadius)
-    }
-
-    return super.path(innerRadius, straightPercentage)
-  }
-
-  points(innerRadius, straightPercentage) {
-    const [inner, intermediate1, intermediate2, outer] = super.points(innerRadius, straightPercentage)
-    const radius = calculateRadius(intermediate1[0], outer[0], intermediate2[0])
-
-    return [inner, intermediate1, intermediate2, radius]
-  }
-
-  constructPath(inner, intermediate1, intermediate2, radius) {
-    const points = _.zip(inner, intermediate1, intermediate2)
-
-    const sectionStrings = points.map(([inner, intermediate1, intermediate2]) =>
-        `${inner} L ${intermediate1} A ${radius} ${radius} 0 0 1 ${intermediate2}`)
-    return `M ${sectionStrings.join(' L ')} Z`
-  }
-}
-
-class QuadraticStar extends Star {
-  constructor() {
-    super(null, ['inner-radius'])
-  }
-
-  points(innerRadius) {
-    return [innerPoints(innerRadius), outerPoints()]
-  }
-
-  constructPath(inner, outer) {
-    const first = inner[0]
-    inner.push(inner.shift())
-    const points = _.zip(outer, inner)
-
-    const sectionStrings = points.map(([outer, inner]) =>
-        `Q ${outer} ${inner}`)
-
-    return `M ${first} ${sectionStrings.join(' ')} Z`
-  }
-}
-
-class StarWithQuadraticTips extends InnerAndIntermediateStar {
-  constructor() {
-    super('quadratic', ['inner-radius', 'straight-percentage'])
-  }
-
-  path(innerRadius, straightPercentage) {
-    if (straightPercentage === '100') {
-      return linearStar.path(innerRadius)
-    }
-    if (straightPercentage === '0') {
-      return quadraticStar.path(innerRadius)
-    }
-
-    return super.path(innerRadius, straightPercentage)
-  }
-
-  constructPath(inner, intermediate1, intermediate2, outer) {
-    const points = _.zip(inner, intermediate1, outer, intermediate2)
-
-    const sectionStrings = points.map(([inner, intermediate1, outer, intermediate2]) =>
-        `${inner} L ${intermediate1} Q ${outer} ${intermediate2}`)
-    return `M ${sectionStrings.join(' L ')} Z`
-  }
-}
-
-class CubicStar extends InnerAndIntermediateStar {
-  constructor() {
-    super(null, ['inner-radius', 'control-percentage'])
-  }
-
-  points(innerRadius, controlPercentage) {
-    const [inner, control1, control2, _outer] = super.points(innerRadius, controlPercentage)
-    return [inner, control1, control2]
-  }
-
-  constructPath(inner, control1, control2) {
-    const first = inner[0]
-    inner.push(inner.shift())
-    const points = _.zip(control1, control2, inner)
-
-    const sectionStrings = points.map(([control1, control2, inner]) =>
-        `C ${control1} ${control2} ${inner}`)
-    return `M ${first} ${sectionStrings.join(' ')} Z`
-  }
-}
-
-class StarWithCubicTips extends Star {
-  constructor() {
-    super('cubic', ['inner-radius', 'straight-percentage', 'control-percentage'])
-  }
-
-  path(innerRadius, straightPercentage, controlPercentage) {
-    if (straightPercentage === '100') {
-      return linearStar.path(innerRadius)
-    }
-    if (straightPercentage === '0') {
-      return cubicStar.path(innerRadius, controlPercentage)
-    }
-
-    return super.path(innerRadius, straightPercentage, controlPercentage)
-  }
-
-  points(innerRadius, straightPercentage, controlPercentage) {
-    const outer = outerPoints()
-    const inner = innerPoints(innerRadius)
-    const [intermediate1, intermediate2] = calculateIntermediatePointsComingAndGoing(inner, outer, straightPercentage)
-    const [control1, control2] = calculateIntermediatePoints(intermediate1, intermediate2, outer, controlPercentage)
-
-    return [inner, intermediate1, intermediate2, control1, control2]
-  }
-
-  constructPath(inner, intermediate1, intermediate2, control1, control2) {
-    const points = _.zip(inner, intermediate1, control1, control2, intermediate2)
-
-    const sectionStrings = points.map(([inner, intermediate1, control1, control2, intermediate2]) =>
-        `${inner} L ${intermediate1} C ${control1} ${control2} ${intermediate2}`)
-    return `M ${sectionStrings.join(' L ')} Z`
-  }
-}
-
-class CrossingCubicStar extends Star {
-  constructor() {
-    super('crossingcubic', ['control-angle', 'control-distance'])
-  }
-
-  points(controlAngle, controlDistance) {
-    const outer = outerPoints()
-
-    const halfAngle = (controlAngle / 2) * (Math.PI / 180)
-    const angles = outerAngles()
-    const controlAngles1 = angles.map((angle) => angle + Math.PI - halfAngle)
-    const controlAngles2 = angles.map((angle) => angle + Math.PI + halfAngle)
-
-    const displacement1 = controlAngles1.map((angle) => polarToCartesian(angle, controlDistance))
-    const displacement2 = controlAngles2.map((angle) => polarToCartesian(angle, controlDistance))
-    const controlPoints1 = _.zip(outer, displacement1).map(addPoints)
-    const controlPoints2 = _.zip(outer, displacement2).map(addPoints)
-
-    return [outer, controlPoints1, controlPoints2]
-  }
-
-  constructPath(outer, control1, control2) {
-    return `M ${outer[0]} C ${control1[0]} ${control2[2]} ${outer[2]}
-                          C ${control1[2]} ${control2[4]} ${outer[4]}
-                          C ${control1[4]} ${control2[1]} ${outer[1]}
-                          C ${control1[1]} ${control2[3]} ${outer[3]}
-                          C ${control1[3]} ${control2[0]} ${outer[0]}
-                          Z`
-  }
-}
-
-
-const linearStar = new LinearStar()
-const starWithCircularTips = new StarWithCircularTips()
-const quadraticStar = new QuadraticStar()
-const starWithQuadraticTips = new StarWithQuadraticTips()
-const cubicStar = new CubicStar()
-const starWithCubicTips = new StarWithCubicTips()
-const crossingCubicStar = new CrossingCubicStar()
 
 export function initializeStars(options) {
   const initialShape = options.s === undefined ? 'crossingcubic' : options.s
@@ -317,8 +101,4 @@ export function initializeStars(options) {
   $('#crossingcubic').change(crossingCubicStar.use)
   $(`#${initialShape}`).prop('checked', true)
   $('input[name=shape]:checked').change()
-}
-
-export function updateStarPath() {
-  currentStar.refreshPath()
 }
