@@ -7,7 +7,7 @@ import crossingCubicStar from './shapes/crossing-cubic-star.js'
 
 export { updateStarPath } from './shapes/base-star.js'
 
-export function initializeStars(options) {
+export function initializeShapes(options) {
   const initialShape = options.s === undefined ? 'crossingcubic' : options.s
 
   $('#circular').change(starWithCircularTips.use)

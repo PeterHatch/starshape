@@ -2,7 +2,7 @@ const path = require('path');
 const SystemBellPlugin = require('system-bell-webpack-plugin');
 
 module.exports = {
-  entry: './src/starshape.js',
+  entry: './src/index.js',
   output: {
     path: 'compiled',
     filename: 'starshape.js',

@@ -1,24 +1,24 @@
 /* globals $ */
 
 import { updateUrlQuery } from '../uri.js'
-import { showControls, controlVals } from '../controls.js'
+import { showSliders, readSliders } from '../sliders.js'
 
 let currentStar = null
 
 export default class Star {
-  constructor(name, controls) {
+  constructor(name, sliderNames) {
     this.name = name
-    this.controls = controls
+    this.sliderNames = sliderNames
     this.use = () => {
       currentStar = this
-      showControls(...this.controls)
+      showSliders(...this.controls)
       updateUrlQuery('s', this.name)
       this.refreshPath()
     }
   }
 
   refreshPath() {
-    const pathString = this.path(...controlVals(...this.controls))
+    const pathString = this.path(...readSliders(...this.sliderNames))
     $('#star').attr('d', pathString)
   }
 

@@ -1,11 +1,11 @@
 /* globals $ */
 
-import { updateStarPath } from './star.js'
+import { updateStarPath } from './shapes.js'
 import { updateUrlQuery } from './uri.js'
 
-const controls = new Map()
-controls.add = function addControl(control) {
-  this.set(control.name, control)
+const sliders = new Map()
+sliders.add = function addSlider(slider) {
+  this.set(slider.name, slider)
 }
 
 class Slider {
@@ -72,24 +72,24 @@ class PercentSlider extends Slider {
   }
 }
 
-export function initializeControls(options) {
-  controls.add(new Slider('inner-radius', 'r', 1 - (2 / (1 + Math.sqrt(5))), options.r))
-  controls.add(new PercentSlider('straight-percentage', 'l', 75, options.l))
-  controls.add(new PercentSlider('control-percentage', 'c', 100, options.c))
-  controls.add(new Slider('control-angle', 'ca', 180, options.ca))
-  controls.add(new Slider('control-distance', 'cd', 0.15, options.cd))
+export function initializeSliders(options) {
+  sliders.add(new Slider('inner-radius', 'r', 1 - (2 / (1 + Math.sqrt(5))), options.r))
+  sliders.add(new PercentSlider('straight-percentage', 'l', 75, options.l))
+  sliders.add(new PercentSlider('control-percentage', 'c', 100, options.c))
+  sliders.add(new Slider('control-angle', 'ca', 180, options.ca))
+  sliders.add(new Slider('control-distance', 'cd', 0.15, options.cd))
 }
 
-export function showControls(...visibleControls) {
-  for (const [controlName, control] of controls) {
-    if (visibleControls.includes(controlName)) {
-      control.show()
+export function showSliders(...visibleSliders) {
+  for (const [name, slider] of sliders) {
+    if (visibleSliders.includes(name)) {
+      slider.show()
     } else {
-      control.hide()
+      slider.hide()
     }
   }
 }
 
-export function controlVals(...controlNames) {
-  return controlNames.map((name) => controls.get(name).val())
+export function readSliders(...names) {
+  return names.map((name) => sliders.get(name).val())
 }
