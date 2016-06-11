@@ -1,15 +1,8 @@
-/* global $ _ URI */
+/* global $ _ */
+
+import { initializeOptions, updateUrlQuery } from './uri.js'
 
 let currentStar = null
-let uri = null
-
-function updateUrlQuery(key, value) {
-  uri.search((queryParams) => {
-    queryParams[key] = value  // eslint-disable-line no-param-reassign
-  })
-  history.replaceState(null, '', uri.resource())
-}
-
 
 const controls = new Map()
 controls.add = function addControl(control) {
@@ -102,24 +95,6 @@ function refreshBackground(color) {
   } else {
     $('#swatch').css('background-color', '')
   }
-}
-
-
-function initializeOptions() {
-  uri = new URI()
-  const options = uri.search(true)
-
-  if (options.s === undefined) {
-    options.s = 'crossingcubic'
-  }
-  if (options.fg === undefined) {
-    options.fg = 'fddc34'
-  }
-  if (options.bg === undefined) {
-    options.bg = '000000'
-  }
-
-  return options
 }
 
 
