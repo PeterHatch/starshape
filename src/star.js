@@ -309,11 +309,13 @@ const starWithCubicTips = new StarWithCubicTips()
 const crossingCubicStar = new CrossingCubicStar()
 
 export function initializeStars(options) {
+  const initialShape = options.s === undefined ? 'crossingcubic' : options.s
+
   $('#circular').change(starWithCircularTips.use)
   $('#quadratic').change(starWithQuadraticTips.use)
   $('#cubic').change(starWithCubicTips.use)
   $('#crossingcubic').change(crossingCubicStar.use)
-  $(`#${options.s}`).prop('checked', true)
+  $(`#${initialShape}`).prop('checked', true)
   $('input[name=shape]:checked').change()
 }
 

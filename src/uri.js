@@ -4,19 +4,7 @@ let uri = null
 
 export function initializeOptions() {
   uri = new URI()
-  const options = uri.search(true)
-
-  if (options.s === undefined) {
-    options.s = 'crossingcubic'
-  }
-  if (options.fg === undefined) {
-    options.fg = 'fddc34'
-  }
-  if (options.bg === undefined) {
-    options.bg = '000000'
-  }
-
-  return options
+  return uri.search(true)
 }
 
 export function updateUrlQuery(key, value) {

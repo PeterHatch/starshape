@@ -15,9 +15,12 @@ function refreshBackground(color) {
 }
 
 export function initializeColors(options) {
+  const fgColor = options.fg === undefined ? 'fddc34' : options.fg
+  const bgColor = options.bg === undefined ? '000000' : options.bg
+
   $('#fg-color-picker').spectrum({
     showInput: true,
-    color: options.fg,
+    color: fgColor,
     move: refreshForeground,
     hide: refreshForeground,
     change: (color) => { updateUrlQuery('fg', color.toHex()) },
@@ -25,7 +28,7 @@ export function initializeColors(options) {
 
   $('#bg-color-picker').spectrum({
     showInput: true,
-    color: options.bg,
+    color: bgColor,
     allowEmpty: true,
     move: refreshBackground,
     hide: refreshBackground,
