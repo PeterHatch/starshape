@@ -1,4 +1,4 @@
-import _ from 'underscore'
+import zip from 'lodash.zip'
 
 class Point {
   constructor(x, y) {
@@ -62,10 +62,10 @@ export function calculateOuterPoints(radius = 1) {
 function calculateSimpleIntermediatePoints(innerPoints, outerPoints, percentage) {
   const fullDistance = calculateDistance(innerPoints[0], outerPoints[0])
   const straightDistance = (percentage / 100) * fullDistance
-  const angles = _.zip(innerPoints, outerPoints).map(([innerPoint, outerPoint]) => calculateAngle(innerPoint, outerPoint))
+  const angles = zip(innerPoints, outerPoints).map(([innerPoint, outerPoint]) => calculateAngle(innerPoint, outerPoint))
 
   const displacementVectors = angles.map((angle) => polarToCartesian(angle, straightDistance))
-  return _.zip(innerPoints, displacementVectors).map(addPoints)
+  return zip(innerPoints, displacementVectors).map(addPoints)
 }
 
 export function calculateIntermediatePoints(innerPoints1, innerPoints2, outerPoints, percentage) {

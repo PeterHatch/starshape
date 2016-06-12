@@ -1,4 +1,4 @@
-import _ from 'underscore'
+import zip from 'lodash.zip'
 
 import Star from './base-star.js'
 import { calculateOuterPoints, calculateInnerPoints, calculateIntermediatePoints, calculateIntermediatePointsComingAndGoing } from './util/math.js'
@@ -31,7 +31,7 @@ class StarWithCubicTips extends Star {
   }
 
   constructPath(innerPoints, intermediatePoints1, intermediatePoints2, controlPoints1, controlPoints2) {
-    const points = _.zip(innerPoints, intermediatePoints1, controlPoints1, controlPoints2, intermediatePoints2)
+    const points = zip(innerPoints, intermediatePoints1, controlPoints1, controlPoints2, intermediatePoints2)
 
     const sectionStrings = points.map(([inner, intermediate1, control1, control2, intermediate2]) =>
         `${inner} L ${intermediate1} C ${control1} ${control2} ${intermediate2}`)

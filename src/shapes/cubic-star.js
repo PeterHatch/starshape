@@ -1,4 +1,4 @@
-import _ from 'underscore'
+import zip from 'lodash.zip'
 
 import InnerAndIntermediateStar from './base-inner-and-intermediate-star.js'
 
@@ -15,7 +15,7 @@ class CubicStar extends InnerAndIntermediateStar {
   constructPath(innerPoints, controlPoints1, controlPoints2) {
     const first = innerPoints[0]
     innerPoints.push(innerPoints.shift())
-    const points = _.zip(controlPoints1, controlPoints2, innerPoints)
+    const points = zip(controlPoints1, controlPoints2, innerPoints)
 
     const sectionStrings = points.map(([control1, control2, inner]) =>
         `C ${control1} ${control2} ${inner}`)

@@ -1,4 +1,4 @@
-import _ from 'underscore'
+import zip from 'lodash.zip'
 
 import Star from './base-star.js'
 import { calculateInnerPoints, calculateOuterPoints } from './util/math.js'
@@ -15,7 +15,7 @@ class QuadraticStar extends Star {
   constructPath(innerPoints, outerPoints) {
     const first = innerPoints[0]
     innerPoints.push(innerPoints.shift())
-    const points = _.zip(outerPoints, innerPoints)
+    const points = zip(outerPoints, innerPoints)
 
     const sectionStrings = points.map(([outer, inner]) =>
         `Q ${outer} ${inner}`)

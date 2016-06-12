@@ -1,4 +1,4 @@
-import _ from 'underscore'
+import zip from 'lodash.zip'
 
 import Star from './base-star.js'
 import { calculateOuterPoints, getOuterAngles, polarToCartesian, addPoints } from './util/math.js'
@@ -18,8 +18,8 @@ class CrossingCubicStar extends Star {
 
     const displacement1 = controlAngles1.map((angle) => polarToCartesian(angle, controlDistance))
     const displacement2 = controlAngles2.map((angle) => polarToCartesian(angle, controlDistance))
-    const controlPoints1 = _.zip(outer, displacement1).map(addPoints)
-    const controlPoints2 = _.zip(outer, displacement2).map(addPoints)
+    const controlPoints1 = zip(outer, displacement1).map(addPoints)
+    const controlPoints2 = zip(outer, displacement2).map(addPoints)
 
     return [outer, controlPoints1, controlPoints2]
   }

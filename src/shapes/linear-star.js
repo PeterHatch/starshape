@@ -1,4 +1,5 @@
-import _ from 'underscore'
+import flatten from 'lodash.flatten'
+import zip from 'lodash.zip'
 
 import Star from './base-star.js'
 import { calculateInnerPoints, calculateOuterPoints } from './util/math.js'
@@ -13,7 +14,7 @@ class LinearStar extends Star {
   }
 
   constructPath(innerPoints, outerPoints) {
-    const points = _.flatten(_.zip(innerPoints, outerPoints))
+    const points = flatten(zip(innerPoints, outerPoints))
     return `M ${points.join(' L ')} Z`
   }
 }

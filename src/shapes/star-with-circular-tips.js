@@ -1,4 +1,4 @@
-import _ from 'underscore'
+import zip from 'lodash.zip'
 
 import InnerAndIntermediateStar from './base-inner-and-intermediate-star.js'
 import { calculateRadius } from './util/math.js'
@@ -25,7 +25,7 @@ class StarWithCircularTips extends InnerAndIntermediateStar {
   }
 
   constructPath(innerPoints, intermediatePoints1, intermediatePoints2, radius) {
-    const points = _.zip(innerPoints, intermediatePoints1, intermediatePoints2)
+    const points = zip(innerPoints, intermediatePoints1, intermediatePoints2)
 
     const sectionStrings = points.map(([inner, intermediate1, intermediate2]) =>
         `${inner} L ${intermediate1} A ${radius} ${radius} 0 0 1 ${intermediate2}`)

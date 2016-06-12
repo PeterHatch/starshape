@@ -1,4 +1,4 @@
-import _ from 'underscore'
+import zip from 'lodash.zip'
 
 import InnerAndIntermediateStar from './base-inner-and-intermediate-star.js'
 import linearStar from './linear-star.js'
@@ -22,7 +22,7 @@ class StarWithQuadraticTips extends InnerAndIntermediateStar {
   }
 
   constructPath(innerPoints, intermediatePoints1, intermediatePoints2, outerPoints) {
-    const points = _.zip(innerPoints, intermediatePoints1, outerPoints, intermediatePoints2)
+    const points = zip(innerPoints, intermediatePoints1, outerPoints, intermediatePoints2)
 
     const sectionStrings = points.map(([inner, intermediate1, outer, intermediate2]) =>
         `${inner} L ${intermediate1} Q ${outer} ${intermediate2}`)

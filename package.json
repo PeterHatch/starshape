@@ -51,9 +51,10 @@
   },
   "dependencies": {
     "jquery": "^3.0.0",
+    "lodash.flatten": "^4.2.0",
+    "lodash.zip": "^4.0.0",
     "rangeslider.js": "^2.1.1",
     "spectrum-colorpicker": "^1.8.0",
-    "underscore": "^1.8.3",
     "urijs": "^1.18.1"
   }
 }
