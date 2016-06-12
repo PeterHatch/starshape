@@ -1,4 +1,6 @@
-/* global $ */
+import $ from 'jquery'
+import 'rangeslider.js'
+import 'spectrum-colorpicker'
 
 import { initializeOptions } from './uri.js'
 import { initializeSliders } from './sliders.js'

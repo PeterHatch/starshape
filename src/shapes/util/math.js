@@ -1,4 +1,4 @@
-/* globals _ */
+import _ from 'underscore'
 
 class Point {
   constructor(x, y) {

@@ -1,4 +1,4 @@
-/* global $ */
+import $ from 'jquery'
 
 import { updateUrlQuery } from './uri.js'
 

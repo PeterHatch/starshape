@@ -1,4 +1,4 @@
-/* globals $ */
+import $ from 'jquery'
 
 import { updateStarPath } from './shapes.js'
 import { updateUrlQuery } from './uri.js'

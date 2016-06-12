@@ -1,4 +1,4 @@
-/* globals _ */
+import _ from 'underscore'
 
 import Star from './base-star.js'
 import { calculateOuterPoints, getOuterAngles, polarToCartesian, addPoints } from './util/math.js'

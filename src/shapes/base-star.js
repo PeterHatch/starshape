@@ -1,4 +1,4 @@
-/* globals $ */
+import $ from 'jquery'
 
 import { updateUrlQuery } from '../uri.js'
 import { showSliders, readSliders } from '../sliders.js'

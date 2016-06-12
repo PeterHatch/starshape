@@ -1,4 +1,4 @@
-/* globals $ */
+import $ from 'jquery'
 
 import starWithCircularTips from './shapes/star-with-circular-tips.js'
 import starWithQuadraticTips from './shapes/star-with-quadratic-tips.js'

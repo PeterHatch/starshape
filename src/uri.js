@@ -1,4 +1,4 @@
-/* global URI */
+import URI from 'urijs'
 
 let uri = null
 

@@ -1,4 +1,4 @@
-/* globals _ */
+import _ from 'underscore'
 
 import InnerAndIntermediateStar from './base-inner-and-intermediate-star.js'
 import linearStar from './linear-star.js'

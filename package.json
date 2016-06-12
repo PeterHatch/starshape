@@ -48,5 +48,12 @@
     "build": "npm run build:scripts -s && npm run build:styles -s && npm run build:markup -s",
     "watch": "parallelshell \"npm run watch:scripts -s\" \"npm run watch:styles -s\" \"npm run watch:markup -s\"",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "jquery": "^3.0.0",
+    "rangeslider.js": "^2.1.1",
+    "spectrum-colorpicker": "^1.8.0",
+    "underscore": "^1.8.3",
+    "urijs": "^1.18.1"
   }
 }
