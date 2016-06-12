@@ -11,7 +11,7 @@ export default class Star {
     this.sliderNames = sliderNames
     this.use = () => {
       currentStar = this
-      showSliders(...this.controls)
+      showSliders(...this.sliderNames)
       updateUrlQuery('s', this.name)
       this.refreshPath()
     }
