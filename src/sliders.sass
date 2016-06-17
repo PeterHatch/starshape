@@ -1,0 +1,74 @@
+// Madified from Ana Tudor's design at http://codepen.io/thebabydino/pen/PwOPMG
+
+$track-w: 100%
+$track-h: 1em
+
+$track-bg: #ecebe9
+$track-fill: slateblue
+$thumb-bg: #eae9ea
+$thumb-border: #606060
+
+=track($lower: true)
+  border: none  // because IE
+  width: $track-w
+  height: $track-h
+  border-radius: $track-h / 2
+  background: $track-bg
+
+  @if $lower
+    // only Firefox & Chrome/Opera
+    background-image: linear-gradient($track-fill, $track-fill), linear-gradient($track-bg, $track-bg)
+    background-repeat: no-repeat
+    background-size: 50% 100%, 100% 100%
+
+=thumb
+  box-sizing: border-box
+  width: 1em    // If this changes, the JS must also be updated.
+  height: 1em
+  border-radius: 50%
+  background: $thumb-bg
+  border: solid 1px $thumb-border
+
+input[type='range']
+  display: block
+  font-size: 1.25em // If this changes, the thumb width in the JS must also be updated.
+  width: $track-w
+  height: 1.5em
+  border: solid 0 transparent
+  border-radius: .25em
+  padding: 0
+  margin: 0
+  background: none
+  cursor: pointer
+  -webkit-appearance: none
+
+  &::-webkit-slider-runnable-track
+    -webkit-appearance: none
+    +track
+
+  &::-webkit-slider-thumb
+    -webkit-appearance: none
+    +thumb
+
+  &::-moz-range-track
+    +track
+
+  &::-moz-range-thumb
+    +thumb
+
+  &::-ms-track
+    color: transparent
+    +track(false)
+
+  &::-ms-thumb
+    +thumb
+
+  &::-ms-fill-lower
+    border-radius: ($track-h / 2) 0 0 ($track-h / 2)
+    background: $track-fill
+
+  &::-ms-fill-upper
+    background: transparent
+
+  &::-ms-tooltip
+    display: none

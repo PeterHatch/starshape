@@ -1,11 +1,10 @@
 import 'babel-polyfill'
 
 import $ from 'jquery'
-import 'rangeslider.js'
 import 'spectrum-colorpicker'
 
 import { initializeOptions } from './uri.js'
-import { initializeSliders } from './sliders.js'
+import { initializeSliders, resizeSliders } from './sliders.js'
 import { initializeShapes } from './shapes.js'
 import { initializeColors } from './colors.js'
 
@@ -14,4 +13,6 @@ $(document).ready(() => {
   initializeSliders(options)
   initializeShapes(options)
   initializeColors(options)
+
+  window.addEventListener('resize', resizeSliders)
 })
