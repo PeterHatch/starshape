@@ -3,14 +3,14 @@ import $ from 'jquery'
 import { updateUrlQuery } from './uri.js'
 
 function refreshForeground(color) {
-  $('#swatch').css('color', color.toHexString())
+  document.getElementById('swatch').style.color = color.toHexString()
 }
 
 function refreshBackground(color) {
   if (color !== null) {
-    $('#swatch').css('background-color', color.toHexString())
+    document.getElementById('swatch').style.backgroundColor = color.toHexString()
   } else {
-    $('#swatch').css('background-color', '')
+    document.getElementById('swatch').style.backgroundColor = null
   }
 }
 

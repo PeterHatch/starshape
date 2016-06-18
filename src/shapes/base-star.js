@@ -1,5 +1,3 @@
-import $ from 'jquery'
-
 import { updateUrlQuery } from '../uri.js'
 import { showSliders, readSliders } from '../sliders.js'
 
@@ -19,7 +17,7 @@ export default class Star {
 
   refreshPath() {
     const pathString = this.path(...readSliders(...this.sliderNames))
-    $('#star').attr('d', pathString)
+    document.getElementById('star').setAttribute('d', pathString)
   }
 
   path(...inputs) {

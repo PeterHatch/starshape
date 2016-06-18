@@ -1,5 +1,3 @@
-import $ from 'jquery'
-
 import { updateStarPath } from './shapes.js'
 import { updateUrlQuery } from './uri.js'
 
@@ -13,7 +11,7 @@ class Slider {
     this.name = name
     this._element = document.getElementById(name)
     this._output = document.getElementById(`${name}-value`)
-    this._section = $(`#${name}-section`)
+    this._section = document.getElementById(`${name}-section`)
     this._isVisible = true
     this._uriKey = uriKey
 
@@ -43,7 +41,7 @@ class Slider {
       return this
     }
 
-    this._section.css('visibility', 'visible')
+    this._section.style.visibility = 'visible'
     this.updateBackground()
     this._isVisible = true
     return this
@@ -54,7 +52,7 @@ class Slider {
       return this
     }
 
-    this._section.css('visibility', 'collapse')
+    this._section.style.visibility = 'collapse'
     this._isVisible = false
     return this
   }
