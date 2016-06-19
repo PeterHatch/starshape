@@ -41,7 +41,7 @@ class Slider {
       return this
     }
 
-    this._section.style.visibility = 'visible'
+    this._section.style.display = ''
     this.updateBackground()
     this._isVisible = true
     return this
@@ -52,7 +52,7 @@ class Slider {
       return this
     }
 
-    this._section.style.visibility = 'collapse'
+    this._section.style.display = 'none'
     this._isVisible = false
     return this
   }
