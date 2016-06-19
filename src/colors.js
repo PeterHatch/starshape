@@ -25,7 +25,7 @@ function refreshBackground(color) {
   if (color !== null) {
     document.getElementById('swatch').style.backgroundColor = color.toHexString()
   } else {
-    document.getElementById('swatch').style.backgroundColor = null
+    document.getElementById('swatch').style.backgroundColor = ''
   }
 }
 
