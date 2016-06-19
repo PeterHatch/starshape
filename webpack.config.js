@@ -38,6 +38,11 @@ module.exports = {
       },
     ],
   },
+  resolve: {
+    alias: {
+      jquery$: 'jquery/src/core',
+    },
+  },
   plugins: plugins,
   debug: !production,
   devtool: production ? false : 'source-map',

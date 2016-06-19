@@ -1,7 +1,5 @@
 import 'babel-polyfill'
 
-import 'spectrum-colorpicker'
-
 import { initializeOptions } from './uri.js'
 import { initializeSliders, resizeSliders } from './sliders.js'
 import { initializeShapes } from './shapes.js'
