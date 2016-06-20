@@ -41,7 +41,7 @@
     "prebuild": "npm run clean -s",
     "build:scripts": "cross-env NODE_ENV=production webpack",
     "watch:scripts": "webpack --watch",
-    "build:styles": "node-sass --source-map true --output compiled src/starshape.sass",
+    "build:styles": "node-sass --source-map true --output compiled --output-style compressed src/starshape.sass",
     "watch:styles": "node-sass --source-map true --output compiled --watch --error-bell src/starshape.sass",
     "build:markup": "pug --out compiled src/starshape.pug",
     "watch:markup": "pug --out compiled --watch src/starshape.pug",
