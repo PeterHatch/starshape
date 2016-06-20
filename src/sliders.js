@@ -66,7 +66,7 @@ class Slider {
   }
 
   initializeCssRules() {
-    const stylesheet = document.styleSheets[1]
+    const stylesheet = document.styleSheets[0]
     const property = this.calculateCssForBackground()
     let ruleIndex
     try {
