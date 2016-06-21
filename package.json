@@ -37,19 +37,19 @@
     "webpack-dev-server": "^2.1.0-beta.0"
   },
   "scripts": {
-    "clean": "rimraf ./compiled/*",
+    "clean": "rimraf ./build/*",
     "prebuild": "npm run clean -s",
     "build:scripts": "cross-env NODE_ENV=production webpack",
     "watch:scripts": "webpack --watch",
-    "build:styles": "node-sass --source-map true --output compiled --output-style compressed src/starshape.sass",
-    "watch:styles": "node-sass --source-map true --output compiled --watch --error-bell src/starshape.sass",
-    "build:markup": "pug --out compiled src/index.pug",
-    "watch:markup": "pug --out compiled --watch src/index.pug",
+    "build:styles": "node-sass --source-map true --output build --output-style compressed src/starshape.sass",
+    "watch:styles": "node-sass --source-map true --output build --watch --error-bell src/starshape.sass",
+    "build:markup": "pug --out build src/index.pug",
+    "watch:markup": "pug --out build --watch src/index.pug",
     "lint": "eslint src",
     "build": "npm run build:scripts -s && npm run build:styles -s && npm run build:markup -s",
     "watch": "parallelshell \"npm run watch:scripts -s\" \"npm run watch:styles -s\" \"npm run watch:markup -s\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --content-base compiled"
+    "start": "webpack-dev-server --content-base build"
   },
   "dependencies": {
     "babel-polyfill": "^6.9.1",

@@ -18,9 +18,9 @@ if (production) {
 module.exports = {
   entry: './src/index.js',
   output: {
-    path: 'compiled',
+    path: 'build',
     filename: 'starshape.js',
-    publicPath: 'compiled/',
+    publicPath: 'build/',
   },
   module: {
     preLoaders: [
