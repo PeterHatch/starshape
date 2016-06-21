@@ -1,5 +1,5 @@
 import { updateStarPath } from './shapes.js'
-import { updateUrlQuery } from './uri.js'
+import { updateUrlQuery } from './url.js'
 
 const sliders = new Map()
 sliders.add = function addSlider(slider) {
@@ -7,13 +7,13 @@ sliders.add = function addSlider(slider) {
 }
 
 class Slider {
-  constructor(name, uriKey, defaultValue, initialValue) {
+  constructor(name, urlKey, defaultValue, initialValue) {
     this.name = name
     this._element = document.getElementById(name)
     this._output = document.getElementById(`${name}-value`)
     this._section = document.getElementById(`${name}-section`)
     this._isVisible = true
-    this._uriKey = uriKey
+    this._urlKey = urlKey
 
     this._element.addEventListener('input', (event) => {
       this._updateText(event.currentTarget.value)
@@ -23,7 +23,7 @@ class Slider {
     this._element.addEventListener('change', (event) => {
       this._updateText(event.currentTarget.value)
       updateStarPath()
-      updateUrlQuery(this._uriKey, event.currentTarget.value)
+      updateUrlQuery(this._urlKey, event.currentTarget.value)
     })
     const value = initialValue === undefined ? defaultValue : initialValue
     this._element.value = value

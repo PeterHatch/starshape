@@ -1,4 +1,4 @@
-import { updateUrlQuery } from '../uri.js'
+import { updateUrlQuery } from '../url.js'
 import { showSliders, readSliders } from '../sliders.js'
 
 let currentStar = null
