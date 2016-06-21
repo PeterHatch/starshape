@@ -1,15 +1,18 @@
-import URI from 'urijs'
+import URLSearchParams from 'url-search-params'
 
-let uri = null
+let params = null
 
 export function initializeOptions() {
-  uri = new URI()
-  return uri.search(true)
+  params = new URLSearchParams(location.search.slice(1))
+
+  const options = {}
+  for (const [key, value] of params.entries()) {
+    options[key] = value
+  }
+  return options
 }
 
 export function updateUrlQuery(key, value) {
-  uri.search((queryParams) => {
-    queryParams[key] = value  // eslint-disable-line no-param-reassign
-  })
-  history.replaceState(null, '', uri.resource())
+  params.set(key, value)
+  history.replaceState(null, '', `${location.pathname}?${params}`)
 }
