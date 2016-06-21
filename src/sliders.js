@@ -9,60 +9,60 @@ sliders.add = function addSlider(slider) {
 class Slider {
   constructor(name, urlKey, defaultValue, initialValue) {
     this.name = name
-    this._element = document.getElementById(name)
-    this._output = document.getElementById(`${name}-value`)
-    this._section = document.getElementById(`${name}-section`)
-    this._isVisible = true
-    this._urlKey = urlKey
+    this.element = document.getElementById(name)
+    this.output = document.getElementById(`${name}-value`)
+    this.section = document.getElementById(`${name}-section`)
+    this.isVisible = true
+    this.urlKey = urlKey
 
-    this._element.addEventListener('input', (event) => {
-      this._updateText(event.currentTarget.value)
+    this.element.addEventListener('input', (event) => {
+      this.updateText(event.currentTarget.value)
       updateStarPath()
       this.updateBackground()  // This is not needed for IE, and not called because IE only does change events
     })
-    this._element.addEventListener('change', (event) => {
-      this._updateText(event.currentTarget.value)
+    this.element.addEventListener('change', (event) => {
+      this.updateText(event.currentTarget.value)
       updateStarPath()
-      updateUrlQuery(this._urlKey, event.currentTarget.value)
+      updateUrlQuery(this.urlKey, event.currentTarget.value)
     })
     const value = initialValue === undefined ? defaultValue : initialValue
-    this._element.value = value
-    this._updateText(value)
+    this.element.value = value
+    this.updateText(value)
 
     this.initializeCssRules()
   }
 
   val() {
-    return this._element.value
+    return this.element.value
   }
 
   show() {
-    if (this._isVisible) {
+    if (this.isVisible) {
       return this
     }
 
-    this._section.style.display = ''
+    this.section.style.display = ''
     this.updateBackground()
-    this._isVisible = true
+    this.isVisible = true
     return this
   }
 
   hide() {
-    if (!this._isVisible) {
+    if (!this.isVisible) {
       return this
     }
 
-    this._section.style.display = 'none'
-    this._isVisible = false
+    this.section.style.display = 'none'
+    this.isVisible = false
     return this
   }
 
-  _format(value) {
+  format(value) {
     return value
   }
 
-  _updateText(value) {
-    this._output.textContent = this._format(value)
+  updateText(value) {
+    this.output.textContent = this.format(value)
   }
 
   initializeCssRules() {
@@ -95,12 +95,12 @@ class Slider {
   }
   calculateCssForBackground() {
     const thumbWidth = 20  // If the CSS for the thumb width changes, so must this line
-    const trackWidth = this._element.scrollWidth
+    const trackWidth = this.element.scrollWidth
     const minFilledFraction = (thumbWidth / 2) / trackWidth
     const fillableFraction = (trackWidth - thumbWidth) / trackWidth
 
-    const min = this._element.min
-    const max = this._element.max
+    const min = this.element.min
+    const max = this.element.max
     const current = this.val()
 
     const currentFraction = (current - min) / (max - min)
@@ -119,7 +119,7 @@ class Slider {
 
 
 class PercentSlider extends Slider {
-  _format(value) {
+  format(value) {
     return `${value}%`
   }
 }
