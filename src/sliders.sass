@@ -23,8 +23,8 @@ $thumb-border: #606060
 
 =thumb
   box-sizing: border-box
-  width: 1em    // If this changes, the JS must also be updated.
-  height: 1em
+  width: 1.5em    // If this changes, the JS must also be updated.
+  height: 1.5em
   border-radius: 50%
   background: $thumb-bg
   border: solid 1px $thumb-border
@@ -48,6 +48,7 @@ input[type='range']
 
   &::-webkit-slider-thumb
     -webkit-appearance: none
+    margin-top: -0.25em
     +thumb
 
   &::-moz-range-track

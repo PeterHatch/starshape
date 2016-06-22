@@ -99,7 +99,7 @@ class Slider {
   }
 
   calculateCssForBackground() {
-    const thumbWidth = 20  // If the CSS for the thumb width changes, so must this line
+    const thumbWidth = 30  // If the CSS for the thumb width changes, so must this line
     const trackWidth = this.element.scrollWidth
     const minFilledFraction = (thumbWidth / 2) / trackWidth
     const fillableFraction = (trackWidth - thumbWidth) / trackWidth
