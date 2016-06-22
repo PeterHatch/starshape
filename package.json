@@ -42,7 +42,7 @@
     "build:scripts": "cross-env NODE_ENV=production webpack",
     "watch:scripts": "webpack --watch",
     "build:styles": "node-sass --source-map true --output build --output-style compressed src/starshape.sass",
-    "watch:styles": "node-sass --source-map true --output build --watch --error-bell src/starshape.sass",
+    "watch:styles": "node-sass --source-map true --output build --watch --recursive --error-bell src/starshape.sass",
     "build:markup": "pug --out build src/index.pug",
     "watch:markup": "pug --out build --watch src/index.pug",
     "lint": "eslint src",
