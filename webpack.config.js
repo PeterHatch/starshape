@@ -1,0 +1,49 @@
+'use strict'
+
+const webpack = require('webpack')
+
+const SystemBellPlugin = require('system-bell-webpack-plugin')
+const production = process.env.NODE_ENV === 'production'
+
+let plugins = [
+  new SystemBellPlugin(),
+]
+
+if (production) {
+  plugins = plugins.concat([
+    new webpack.optimize.UglifyJsPlugin(),
+  ])
+}
+
+module.exports = {
+  entry: './src/index.js',
+  output: {
+    path: 'build',
+    filename: 'starshape.js',
+    publicPath: 'build/',
+  },
+  module: {
+    preLoaders: [
+      {
+        test: /\.js$/,
+        loader: 'eslint',
+        exclude: /node_modules/,
+      },
+    ],
+    loaders: [
+      {
+        test: /\.js$/,
+        loader: 'babel',
+        exclude: /node_modules/,
+      },
+    ],
+  },
+  resolve: {
+    alias: {
+      jquery$: 'jquery/src/core',
+    },
+  },
+  plugins: plugins,
+  debug: !production,
+  devtool: production ? false : 'source-map',
+}

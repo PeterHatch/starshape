@@ -1,3 +1,6 @@
+@import '../node_modules/spectrum-colorpicker/spectrum'
+@import 'sliders'
+
 body
   margin: 0
   display: flex
@@ -12,7 +15,9 @@ svg
   display: flex
   flex-flow: column
   max-height: 100vh
-  overflow: auto
+  overflow-y: auto
+  overflow-x: hidden
+  width: 18em
 
 h2
   font-family: sans-serif
@@ -22,15 +27,17 @@ h2
   margin-top: 0.5em
   margin-bottom: 0.25em
 
-h4
-  margin-bottom: 0.5em
-
 label
   display: block
 
-.rangeslider__handle
-  line-height: 40px
-  text-align: center
+.slider
+  margin-top: 1em
 
-  &:after
-    background: 0
+.slider__label
+  font-weight: bold
+  display: inline
+
+.slider__value
+  display: inline
+  font-weight: bold
+  color: slateblue
