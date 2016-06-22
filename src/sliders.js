@@ -10,26 +10,29 @@ class Slider {
   constructor(name, urlKey, defaultValue, initialValue) {
     this.name = name
     this.element = document.getElementById(name)
-    this.output = document.getElementById(`${name}-value`)
-    this.section = document.getElementById(`${name}-section`)
+    this.outputElement = document.getElementById(`${name}-value`)
+    this.sectionElement = document.getElementById(`${name}-section`)
     this.isVisible = true
     this.urlKey = urlKey
 
-    this.element.addEventListener('input', (event) => {
-      this.updateText(event.currentTarget.value)
-      updateStarPath()
-      this.updateBackground()  // This is not needed for IE, and not called because IE only does change events
-    })
-    this.element.addEventListener('change', (event) => {
-      this.updateText(event.currentTarget.value)
-      updateStarPath()
-      updateUrlQuery(this.urlKey, event.currentTarget.value)
-    })
+    this.element.addEventListener('input', () => { this.onInput() })
+    this.element.addEventListener('change', () => { this.onChange() })
     const value = initialValue === undefined ? defaultValue : initialValue
     this.element.value = value
-    this.updateText(value)
+    this.updateText()
 
     this.initializeCssRules()
+  }
+
+  onInput() {
+    this.updateText()
+    this.updateBackground()
+    updateStarPath()
+  }
+
+  onChange() {
+    this.onInput()
+    updateUrlQuery(this.urlKey, this.val())
   }
 
   val() {
@@ -41,7 +44,7 @@ class Slider {
       return this
     }
 
-    this.section.style.display = ''
+    this.sectionElement.style.display = ''
     this.updateBackground()
     this.isVisible = true
     return this
@@ -52,18 +55,19 @@ class Slider {
       return this
     }
 
-    this.section.style.display = 'none'
+    this.sectionElement.style.display = 'none'
     this.isVisible = false
     return this
   }
 
-  format(value) {
-    return value
+  formattedValue() {
+    return this.val()
   }
 
-  updateText(value) {
-    this.output.textContent = this.format(value)
+  updateText() {
+    this.outputElement.textContent = this.formattedValue()
   }
+
 
   initializeCssRules() {
     const stylesheet = document.styleSheets[0]
@@ -93,6 +97,7 @@ class Slider {
       this.dynamicStyle = null
     }
   }
+
   calculateCssForBackground() {
     const thumbWidth = 20  // If the CSS for the thumb width changes, so must this line
     const trackWidth = this.element.scrollWidth
@@ -109,6 +114,7 @@ class Slider {
 
     return `background-size: ${filledPercent}% 100%, 100% 100%`
   }
+
   updateBackground() {
     if (this.dynamicStyle !== null) {
       const property = this.calculateCssForBackground()
@@ -119,8 +125,8 @@ class Slider {
 
 
 class PercentSlider extends Slider {
-  format(value) {
-    return `${value}%`
+  formattedValue() {
+    return `${super.formattedValue()}%`
   }
 }
 
