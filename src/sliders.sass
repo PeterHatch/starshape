@@ -29,6 +29,12 @@ $thumb-border: #606060
       background-image: linear-gradient($color, $color), linear-gradient($track-bg, $track-bg)
     &::-ms-fill-lower
       background: $color
+    &::-webkit-slider-thumb
+      background: radial-gradient($color 20%, $thumb-bg 20%)
+    &::-moz-range-thumb
+      background: radial-gradient($color 20%, $thumb-bg 20%)
+    &::-ms-thumb
+      background: radial-gradient($color 20%, $thumb-bg 20%)
 
 =thumb
   box-sizing: border-box
