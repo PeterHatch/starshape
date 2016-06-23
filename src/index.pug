@@ -12,49 +12,51 @@ html(lang="en")
       path(id="star" d="M 1,0 L 0,1 -1,0 0,-1 Z" fill="currentColor")
 
     .controls
-      h2 Colors
-      label
-        input(id="fg-color-picker" class="color-picker" type="text")
-        |  Star
-      label
-        input(id="bg-color-picker" class="color-picker" type="text")
-        |  Background
+      .colors-and-shapes
+        h2 Colors
+        label
+          input(id="fg-color-picker" class="color-picker" type="text")
+          |  Star
+        label
+          input(id="bg-color-picker" class="color-picker" type="text")
+          |  Background
 
-      h2 Shape
-      label
-        input(id="crossingcubic" type="radio" name="shape" checked="checked")
-        | Crossing Cubic Bezier Curves
-      label
-        input(id="cubic"         type="radio" name="shape")
-        | Cubic Bezier Curves
-      label
-        input(id="quadratic"     type="radio" name="shape")
-        | Quadratic Bezier Curves
-      label
-        input(id="circular"      type="radio" name="shape")
-        | Circular Arcs
+        h2 Shape
+        label
+          input(id="crossingcubic" type="radio" name="shape" checked="checked")
+          | Crossing Cubic Bezier Curves
+        label
+          input(id="cubic"         type="radio" name="shape")
+          | Cubic Bezier Curves
+        label
+          input(id="quadratic"     type="radio" name="shape")
+          | Quadratic Bezier Curves
+        label
+          input(id="circular"      type="radio" name="shape")
+          | Circular Arcs
 
-      div.slider.slider--first(id="inner-radius-section")
-        label.slider__label(for="inner-radius") Inner Radius: 
-        output.slider__value(id="inner-radius-value" for="inner-radius") 0.5
-        input.slider__input(id="inner-radius" type="range" min="0.25" max="0.75" step="0.01" value="0.5")
+      .sliders
+        .slider.slider--first(id="inner-radius-section")
+          label.slider__label(for="inner-radius") Inner Radius: 
+          output.slider__value(id="inner-radius-value" for="inner-radius") 0.5
+          input.slider__input(id="inner-radius" type="range" min="0.25" max="0.75" step="0.01" value="0.5")
 
-      div.slider.slider--second(id="straight-percentage-section")
-        label.slider__label(for="straight-percentage") Straight Line Percentage: 
-        output.slider__value(id="straight-percentage-value" for="straight-percentage") 75
-        input.slider__input(id="straight-percentage" type="range" min="0" max="100" value="75")
+        .slider.slider--second(id="straight-percentage-section")
+          label.slider__label(for="straight-percentage") Straight Line Percentage: 
+          output.slider__value(id="straight-percentage-value" for="straight-percentage") 75
+          input.slider__input(id="straight-percentage" type="range" min="0" max="100" value="75")
 
-      div.slider.slider--third(id="control-percentage-section")
-        label.slider__label(for="control-percentage") Control Point Length Percentage: 
-        output.slider__value(id="control-percentage-value" for="control-percentage") 100
-        input.slider__input(id="control-percentage" type="range" min="1" max="200" value="100")
+        .slider.slider--third(id="control-percentage-section")
+          label.slider__label(for="control-percentage") Control Point Length Percentage: 
+          output.slider__value(id="control-percentage-value" for="control-percentage") 100
+          input.slider__input(id="control-percentage" type="range" min="1" max="200" value="100")
 
-      div.slider.slider--first(id="control-angle-section")
-        label.slider__label(for="control-angle") Control Point Angle: 
-        output.slider__value(id="control-angle-value" for="control-angle") 180
-        input.slider__input(id="control-angle" type="range" min="0" max="180" value="180")
+        .slider.slider--first(id="control-angle-section")
+          label.slider__label(for="control-angle") Control Point Angle: 
+          output.slider__value(id="control-angle-value" for="control-angle") 180
+          input.slider__input(id="control-angle" type="range" min="0" max="180" value="180")
 
-      div.slider.slider--second(id="control-distance-section")
-        label.slider__label(for="control-distance") Control Point Distance: 
-        output.slider__value(id="control-distance-value" for="control-distance") 0.25
-        input.slider__input(id="control-distance" type="range" min="0.01" max="1.0" step="0.01" value="0.25")
+        .slider.slider--second(id="control-distance-section")
+          label.slider__label(for="control-distance") Control Point Distance: 
+          output.slider__value(id="control-distance-value" for="control-distance") 0.25
+          input.slider__input(id="control-distance" type="range" min="0.01" max="1.0" step="0.01" value="0.25")
