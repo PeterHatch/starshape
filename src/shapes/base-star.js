@@ -10,7 +10,7 @@ export default class Star {
     this.use = () => {
       currentStar = this
       showSliders(...this.sliderNames)
-      updateUrlQuery('s', this.name)
+      updateUrlQuery('s', this.name)    // This needs to be after showSliders, as that updates the options, and this does the actual URL update
       this.refreshPath()
     }
   }

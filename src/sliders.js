@@ -1,5 +1,5 @@
 import { updateStarPath } from './shapes.js'
-import { updateUrlQuery } from './url.js'
+import { addOption, removeOption, updateUrlQuery } from './url.js'
 
 const sliders = new Map()
 sliders.add = function addSlider(slider) {
@@ -47,6 +47,7 @@ class Slider {
     this.sectionElement.style.display = ''
     this.updateBackground()
     this.isVisible = true
+    addOption(this.urlKey, this.val())
     return this
   }
 
@@ -57,6 +58,7 @@ class Slider {
 
     this.sectionElement.style.display = 'none'
     this.isVisible = false
+    removeOption(this.urlKey)
     return this
   }
 
