@@ -40,4 +40,18 @@ label
 .slider__value
   display: inline
   font-weight: bold
-  color: slateblue
+
+.slider--first
+  +track-color(hsl(200, 75%, 60%))
+  .slider__value
+    color: hsl(200, 75%, 45%)
+
+.slider--second
+  +track-color(hsl(265, 75%, 67.5%))
+  .slider__value
+    color: hsl(265, 75%, 50%)
+
+.slider--third
+  +track-color(hsl(120, 75%, 47.5%))
+  .slider__value
+    color: hsl(120, 75%, 35%)

@@ -4,7 +4,7 @@ $track-w: 100%
 $track-h: 1em
 
 $track-bg: #ecebe9
-$track-fill: slateblue
+$track-fill: #b8b7b5
 $thumb-bg: #eae9ea
 $thumb-border: #606060
 
@@ -21,10 +21,25 @@ $thumb-border: #606060
     background-repeat: no-repeat
     background-size: 50% 100%, 100% 100%
 
+=track-color($color)
+  input[type='range']
+    &::-webkit-slider-runnable-track
+      background-image: linear-gradient($color, $color), linear-gradient($track-bg, $track-bg)
+    &::-moz-range-track
+      background-image: linear-gradient($color, $color), linear-gradient($track-bg, $track-bg)
+    &::-ms-fill-lower
+      background: $color
+    &::-webkit-slider-thumb
+      background: radial-gradient($color 20%, $thumb-bg 20%)
+    &::-moz-range-thumb
+      background: radial-gradient($color 20%, $thumb-bg 20%)
+    &::-ms-thumb
+      background: radial-gradient($color 20%, $thumb-bg 20%)
+
 =thumb
   box-sizing: border-box
-  width: 1em    // If this changes, the JS must also be updated.
-  height: 1em
+  width: 1.5em    // If this changes, the JS must also be updated.
+  height: 1.5em
   border-radius: 50%
   background: $thumb-bg
   border: solid 1px $thumb-border
@@ -48,6 +63,7 @@ input[type='range']
 
   &::-webkit-slider-thumb
     -webkit-appearance: none
+    margin-top: -0.25em
     +thumb
 
   &::-moz-range-track
