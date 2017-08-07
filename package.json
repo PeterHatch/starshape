@@ -22,15 +22,9 @@
     "babili-webpack-plugin": "^0.1.2",
     "cross-env": "^5.0.4",
     "eslint": "^4.4.0",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-config-standard": "^10.2.1",
+    "eslint-config-airbnb-base": "^11.3.1",
     "eslint-loader": "^1.9.0",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-node": "^5.1.1",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-react": "^7.1.0",
-    "eslint-plugin-standard": "^3.0.1",
     "node-sass": "^4.5.3",
     "parallelshell": "^3.0.1",
     "pug-cli": "^1.0.0-alpha6",
@@ -55,11 +49,11 @@
     "start": "webpack-dev-server --content-base build"
   },
   "dependencies": {
-    "babel-polyfill": "^6.9.1",
-    "jquery": "^3.0.0",
-    "lodash.flatten": "^4.2.0",
-    "lodash.zip": "^4.0.0",
+    "babel-polyfill": "^6.23.0",
+    "jquery": "^3.2.1",
+    "lodash.flatten": "^4.4.0",
+    "lodash.zip": "^4.2.0",
     "spectrum-colorpicker": "^1.8.0",
-    "url-search-params": "^0.5.0"
+    "url-search-params": "^0.10.0"
   }
 }

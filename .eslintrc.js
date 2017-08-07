@@ -3,12 +3,9 @@ module.exports = {
     'browser': true,
   },
   extends: [
-    'airbnb',
+    'airbnb-base',
     'plugin:import/errors',
     'plugin:import/warnings',
-  ],
-  plugins: [
-    'react',
   ],
   rules: {
     // Rules copied from Standard JS style
