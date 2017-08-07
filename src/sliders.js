@@ -1,5 +1,5 @@
-import { updateStarPath } from './shapes.js'
-import { addOption, removeOption, updateUrlQuery } from './url.js'
+import { updateStarPath } from './shapes'
+import { addOption, removeOption, updateUrlQuery } from './url'
 
 const sliders = new Map()
 sliders.add = function addSlider(slider) {
@@ -101,7 +101,7 @@ class Slider {
   }
 
   calculateCssForBackground() {
-    const thumbWidth = 30  // If the CSS for the thumb width changes, so must this line
+    const thumbWidth = 30 // If the CSS for the thumb width changes, so must this line
     const trackWidth = this.element.scrollWidth
     const minFilledFraction = (thumbWidth / 2) / trackWidth
     const fillableFraction = (trackWidth - thumbWidth) / trackWidth
@@ -157,5 +157,5 @@ export function showSliders(...visibleSliders) {
 }
 
 export function readSliders(...names) {
-  return names.map((name) => sliders.get(name).val())
+  return names.map(name => sliders.get(name).val())
 }

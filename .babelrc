@@ -1,3 +1,20 @@
 {
-	"presets": ["es2015-webpack"]
+  "presets": [
+    [
+      "modern-browsers", {
+        "modules": false,
+        "edge": true,
+      },
+    ],
+  ],
+  "env": {
+    "production": {
+      "comments": false,
+      "compact": true,
+      "minified": true,
+    },
+    "development": {
+      "compact": false,
+    },
+  },
 }

@@ -1,9 +1,9 @@
 import zip from 'lodash.zip'
 
-import Star from './base-star.js'
-import { calculateOuterPoints, calculateInnerPoints, calculateIntermediatePoints, calculateIntermediatePointsComingAndGoing } from './util/math.js'
-import linearStar from './linear-star.js'
-import cubicStar from './cubic-star.js'
+import Star from './base-star'
+import { calculateOuterPoints, calculateInnerPoints, calculateIntermediatePoints, calculateIntermediatePointsComingAndGoing } from './util/math'
+import linearStar from './linear-star'
+import cubicStar from './cubic-star'
 
 class StarWithCubicTips extends Star {
   constructor() {
@@ -34,7 +34,7 @@ class StarWithCubicTips extends Star {
     const points = zip(innerPoints, intermediatePoints1, controlPoints1, controlPoints2, intermediatePoints2)
 
     const sectionStrings = points.map(([inner, intermediate1, control1, control2, intermediate2]) =>
-        `${inner} L ${intermediate1} C ${control1} ${control2} ${intermediate2}`)
+      `${inner} L ${intermediate1} C ${control1} ${control2} ${intermediate2}`)
     return `M ${sectionStrings.join(' L ')} Z`
   }
 }

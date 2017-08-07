@@ -1,11 +1,7 @@
-import 'core-js/es6/map'
-import 'core-js/fn/array/includes'
-import 'core-js/fn/symbol'
-
-import { initializeOptions } from './url.js'
-import { initializeSliders, resizeSliders } from './sliders.js'
-import { initializeShapes } from './shapes.js'
-import { initializeColors } from './colors.js'
+import { initializeOptions } from './url'
+import { initializeSliders, resizeSliders } from './sliders'
+import { initializeShapes } from './shapes'
+import { initializeColors } from './colors'
 
 
 function ready() {

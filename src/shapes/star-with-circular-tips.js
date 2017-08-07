@@ -1,8 +1,8 @@
 import zip from 'lodash.zip'
 
-import InnerAndIntermediateStar from './base-inner-and-intermediate-star.js'
-import { calculateRadius } from './util/math.js'
-import linearStar from './linear-star.js'
+import InnerAndIntermediateStar from './base-inner-and-intermediate-star'
+import { calculateRadius } from './util/math'
+import linearStar from './linear-star'
 
 class StarWithCircularTips extends InnerAndIntermediateStar {
   constructor() {
@@ -28,7 +28,7 @@ class StarWithCircularTips extends InnerAndIntermediateStar {
     const points = zip(innerPoints, intermediatePoints1, intermediatePoints2)
 
     const sectionStrings = points.map(([inner, intermediate1, intermediate2]) =>
-        `${inner} L ${intermediate1} A ${radius} ${radius} 0 0 1 ${intermediate2}`)
+      `${inner} L ${intermediate1} A ${radius} ${radius} 0 0 1 ${intermediate2}`)
     return `M ${sectionStrings.join(' L ')} Z`
   }
 }

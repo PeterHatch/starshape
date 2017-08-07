@@ -1,9 +1,9 @@
-import starWithCircularTips from './shapes/star-with-circular-tips.js'
-import starWithQuadraticTips from './shapes/star-with-quadratic-tips.js'
-import starWithCubicTips from './shapes/star-with-cubic-tips.js'
-import crossingCubicStar from './shapes/crossing-cubic-star.js'
+import starWithCircularTips from './shapes/star-with-circular-tips'
+import starWithQuadraticTips from './shapes/star-with-quadratic-tips'
+import starWithCubicTips from './shapes/star-with-cubic-tips'
+import crossingCubicStar from './shapes/crossing-cubic-star'
 
-export { updateStarPath } from './shapes/base-star.js'
+export { updateStarPath } from './shapes/base-star'
 
 export function initializeShapes(options) {
   const initialShape = options.s === undefined ? 'crossingcubic' : options.s
@@ -17,7 +17,7 @@ export function initializeShapes(options) {
   initialElement.checked = true
 
   const event = document.createEvent('HTMLEvents')
-  event.initEvent('change', true, false)  // Deprecated, but needed for IE11
+  event.initEvent('change', true, false) // Deprecated, but needed for IE11
   initialElement.dispatchEvent(event)
 
   // The version we'd use if IE11 supported it

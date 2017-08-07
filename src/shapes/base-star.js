@@ -1,5 +1,5 @@
-import { updateUrlQuery } from '../url.js'
-import { showSliders, readSliders } from '../sliders.js'
+import { updateUrlQuery } from '../url'
+import { showSliders, readSliders } from '../sliders'
 
 let currentStar = null
 
@@ -10,7 +10,7 @@ export default class Star {
     this.use = () => {
       currentStar = this
       showSliders(...this.sliderNames)
-      updateUrlQuery('s', this.name)    // This needs to be after showSliders, as that updates the options, and this does the actual URL update
+      updateUrlQuery('s', this.name) // This needs to be after showSliders, as that updates the options, and this does the actual URL update
       this.refreshPath()
     }
   }

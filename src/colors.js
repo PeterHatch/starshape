@@ -15,7 +15,7 @@ import 'jquery/src/offset'
 
 import 'spectrum-colorpicker'
 
-import { updateUrlQuery } from './url.js'
+import { updateUrlQuery } from './url'
 
 function refreshForeground(color) {
   document.getElementById('swatch').style.color = color.toHexString()

@@ -1,8 +1,8 @@
 import flatten from 'lodash.flatten'
 import zip from 'lodash.zip'
 
-import Star from './base-star.js'
-import { calculateInnerPoints, calculateOuterPoints } from './util/math.js'
+import Star from './base-star'
+import { calculateInnerPoints, calculateOuterPoints } from './util/math'
 
 class LinearStar extends Star {
   constructor() {
