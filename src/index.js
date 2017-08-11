@@ -13,8 +13,8 @@ function ready() {
   window.addEventListener('resize', resizeSliders)
 }
 
-if (document.readyState !== 'loading') {
+if (document.readyState === 'complete') {
   ready()
 } else {
-  document.addEventListener('DOMContentLoaded', ready)
+  window.addEventListener('load', ready)
 }
