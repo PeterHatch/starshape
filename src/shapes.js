@@ -16,10 +16,5 @@ export function initializeShapes(options) {
   const initialElement = document.getElementById(initialShape)
   initialElement.checked = true
 
-  const event = document.createEvent('HTMLEvents')
-  event.initEvent('change', true, false) // Deprecated, but needed for IE11
-  initialElement.dispatchEvent(event)
-
-  // The version we'd use if IE11 supported it
-  // initialElement.dispatchEvent(new Event('change'))
+  initialElement.dispatchEvent(new Event('change'))
 }
