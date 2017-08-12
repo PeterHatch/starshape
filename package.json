@@ -45,9 +45,7 @@
     "start": "webpack-dev-server --content-base build"
   },
   "dependencies": {
-    "jquery": "^3.2.1",
     "lodash.flatten": "^4.4.0",
-    "lodash.zip": "^4.2.0",
-    "spectrum-colorpicker": "^1.8.0"
+    "lodash.zip": "^4.2.0"
   }
 }
