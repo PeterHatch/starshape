@@ -4,20 +4,19 @@ $track-w: 100%
 $track-h: 1em
 
 $track-bg: #ecebe9
-$track-fill: #b8b7b5
 $thumb-bg: #eae9ea
 $thumb-border: #606060
 
 =track($lower: true)
-  border: none  // because IE
+  border: none  // needed for MS Edge
   width: $track-w
   height: $track-h
   border-radius: $track-h / 2
   background: $track-bg
 
   @if $lower
-    // only Firefox & Chrome/Opera
-    background-image: linear-gradient($track-fill, $track-fill), linear-gradient($track-bg, $track-bg)
+    // only Firefox & Webkit (Chrome/Opera/Safari)
+    // Firefox has -moz-range-progress, but my use of it looks wrong when slider is near either edge.
     background-repeat: no-repeat
     background-size: 50% 100%, 100% 100%
 
@@ -50,7 +49,6 @@ input[type='range']
   width: $track-w
   height: 1.5em
   border: solid 0 transparent
-  border-radius: .25em
   padding: 0
   margin: 0
   background: none
@@ -77,14 +75,11 @@ input[type='range']
     +track(false)
 
   &::-ms-thumb
+    margin-top: 0 // Needed because Edge also uses -webkit-slider-thumb values
     +thumb
 
   &::-ms-fill-lower
     border-radius: ($track-h / 2) 0 0 ($track-h / 2)
-    background: $track-fill
-
-  &::-ms-fill-upper
-    background: transparent
 
   &::-ms-tooltip
     display: none

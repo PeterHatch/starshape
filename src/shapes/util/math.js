@@ -22,7 +22,7 @@ export function addPoints([point1, point2]) {
 }
 
 function calculateDistance(point1, point2) {
-  return Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2))
+  return Math.sqrt(((point1.x - point2.x) ** 2) + ((point1.y - point2.y) ** 2))
 }
 
 function calculateAngle(point1, point2) {
@@ -46,7 +46,7 @@ export function calculateRadius(a, b, c) {
 
 export function calculateInnerPoints(radius) {
   const innerAngles = [-7 * Math.PI / 10, -3 * Math.PI / 10, Math.PI / 10, 5 * Math.PI / 10, 9 * Math.PI / 10]
-  return innerAngles.map((angle) => polarToCartesian(angle, radius))
+  return innerAngles.map(angle => polarToCartesian(angle, radius))
 }
 
 export function getOuterAngles() {
@@ -54,7 +54,7 @@ export function getOuterAngles() {
 }
 
 export function calculateOuterPoints(radius = 1) {
-  return getOuterAngles().map((angle) => polarToCartesian(angle, radius))
+  return getOuterAngles().map(angle => polarToCartesian(angle, radius))
 }
 
 // This functions calculates the points in between each set of inner and outer points.
@@ -64,7 +64,7 @@ function calculateSimpleIntermediatePoints(innerPoints, outerPoints, percentage)
   const straightDistance = (percentage / 100) * fullDistance
   const angles = zip(innerPoints, outerPoints).map(([innerPoint, outerPoint]) => calculateAngle(innerPoint, outerPoint))
 
-  const displacementVectors = angles.map((angle) => polarToCartesian(angle, straightDistance))
+  const displacementVectors = angles.map(angle => polarToCartesian(angle, straightDistance))
   return zip(innerPoints, displacementVectors).map(addPoints)
 }
 

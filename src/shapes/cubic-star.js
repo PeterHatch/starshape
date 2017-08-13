@@ -1,6 +1,6 @@
 import zip from 'lodash.zip'
 
-import InnerAndIntermediateStar from './base-inner-and-intermediate-star.js'
+import InnerAndIntermediateStar from './base-inner-and-intermediate-star'
 
 class CubicStar extends InnerAndIntermediateStar {
   constructor() {
@@ -18,7 +18,7 @@ class CubicStar extends InnerAndIntermediateStar {
     const points = zip(controlPoints1, controlPoints2, innerPoints)
 
     const sectionStrings = points.map(([control1, control2, inner]) =>
-        `C ${control1} ${control2} ${inner}`)
+      `C ${control1} ${control2} ${inner}`)
     return `M ${first} ${sectionStrings.join(' ')} Z`
   }
 }

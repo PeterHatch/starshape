@@ -1,21 +1,5 @@
-import $ from 'jquery/src/core'
-import 'jquery/src/core/parseHTML'
-
-import 'jquery/src/attributes/attr'
-import 'jquery/src/attributes/classes'
-import 'jquery/src/attributes/val'
-import 'jquery/src/event/alias'
-import 'jquery/src/css'
-import 'jquery/src/css/showHide'
-import 'jquery/src/data'
-import 'jquery/src/deprecated'
-import 'jquery/src/dimensions'
-import 'jquery/src/manipulation'
-import 'jquery/src/offset'
-
-import 'spectrum-colorpicker'
-
-import { updateUrlQuery } from './url.js'
+/* global $ */
+import { updateUrlQuery } from './url'
 
 function refreshForeground(color) {
   document.getElementById('swatch').style.color = color.toHexString()

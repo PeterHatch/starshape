@@ -12,7 +12,15 @@ export function initializeOptions() {
   return options
 }
 
-export function updateUrlQuery(key, value) {
+export function addOption(key, value) {
   params.set(key, value)
+}
+
+export function removeOption(key) {
+  params.delete(key)
+}
+
+export function updateUrlQuery(key, value) {
+  addOption(key, value)
   history.replaceState(null, '', `${location.pathname}?${params}`)
 }

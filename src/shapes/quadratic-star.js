@@ -1,7 +1,7 @@
 import zip from 'lodash.zip'
 
-import Star from './base-star.js'
-import { calculateInnerPoints, calculateOuterPoints } from './util/math.js'
+import Star from './base-star'
+import { calculateInnerPoints, calculateOuterPoints } from './util/math'
 
 class QuadraticStar extends Star {
   constructor() {
@@ -18,7 +18,7 @@ class QuadraticStar extends Star {
     const points = zip(outerPoints, innerPoints)
 
     const sectionStrings = points.map(([outer, inner]) =>
-        `Q ${outer} ${inner}`)
+      `Q ${outer} ${inner}`)
 
     return `M ${first} ${sectionStrings.join(' ')} Z`
   }

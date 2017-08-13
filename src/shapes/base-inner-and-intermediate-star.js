@@ -1,5 +1,5 @@
-import Star from './base-star.js'
-import { calculateOuterPoints, calculateInnerPoints, calculateIntermediatePointsComingAndGoing } from './util/math.js'
+import Star from './base-star'
+import { calculateOuterPoints, calculateInnerPoints, calculateIntermediatePointsComingAndGoing } from './util/math'
 
 export default class InnerAndIntermediateStar extends Star {
   points(innerRadius, percentage) {
