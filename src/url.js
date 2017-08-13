@@ -1,3 +1,5 @@
+import URLSearchParams from 'url-search-params'
+
 let params = null
 
 export function initializeOptions() {

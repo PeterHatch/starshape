@@ -19,10 +19,12 @@ if (production) {
 
 module.exports = [
   {
-    entry: './src/index.js',
+    entry: {
+      starshape: './src/index.js',
+    },
     output: {
       path: path.resolve(__dirname, 'build'),
-      filename: 'starshape.js',
+      filename: '[name].js',
       publicPath: 'build/',
     },
     module: {
@@ -39,10 +41,13 @@ module.exports = [
     devtool: production ? false : 'source-map',
   },
   {
-    entry: './src/loader.js',
+    entry: {
+      loader: './src/loader.js',
+      'starshape.es5': './src/index.es5.js',
+    },
     output: {
       path: path.resolve(__dirname, 'build'),
-      filename: 'loader.js',
+      filename: '[name].js',
       publicPath: 'build/',
     },
     module: {
@@ -52,6 +57,11 @@ module.exports = [
           exclude: /node_modules/,
           enforce: 'pre',
           loader: 'eslint-loader',
+        },
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader',
         },
       ],
     },

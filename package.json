@@ -15,6 +15,8 @@
   },
   "homepage": "https://github.com/PeterHatch/starshape#readme",
   "devDependencies": {
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
     "babili-webpack-plugin": "^0.1.2",
     "cross-env": "^5.0.4",
     "eslint": "^4.4.0",
@@ -45,7 +47,10 @@
     "start": "webpack-dev-server --content-base build"
   },
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
+    "core-js": "^2.5.0",
     "lodash.flatten": "^4.4.0",
-    "lodash.zip": "^4.2.0"
+    "lodash.zip": "^4.2.0",
+    "url-search-params": "^0.10.0"
   }
 }

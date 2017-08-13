@@ -71,10 +71,12 @@ input[type='range']
     +thumb
 
   &::-ms-track
+    color: transparent
     +track(false)
 
   &::-ms-thumb
     margin-top: 0 // Needed because Edge also uses -webkit-slider-thumb values
+    +thumb
 
   &::-ms-fill-lower
     border-radius: ($track-h / 2) 0 0 ($track-h / 2)
