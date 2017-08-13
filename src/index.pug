@@ -4,13 +4,12 @@ html(lang="en")
     meta(charset="utf-8")
     title Starshape
 
+    script(src="loader.js" async)
     link(rel="stylesheet" href="starshape.css")
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.slim.min.js" defer)
     script(src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js" defer)
-    script(src="https://cdnjs.cloudflare.com/ajax/libs/url-search-params/0.10.0/url-search-params.js" async)
     script(src="starshape.js" async)
-
   body
     svg(id="swatch" viewBox="-1.1 -1.1 2.2 2.2")
       path(id="star" d="M 1,0 L 0,1 -1,0 0,-1 Z" fill="currentColor")
